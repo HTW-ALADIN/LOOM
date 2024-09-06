@@ -2,6 +2,10 @@
 
 LOOM is a component library for [CARPET](https://github.com/HTW-ALADIN/CARPET). It is built with Vue 3 and Vite.
 
+<!-- https://shields.io/badges -->
+
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/:user/:repo/:workflow)
+
 ## Component catalog.
 
 The available components are showcased in a Storybook. View it [here]().
