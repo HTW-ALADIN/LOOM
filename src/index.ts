@@ -1,3 +1,3 @@
-// import FccButton from './components/FccButton.vue'
+import DOTGraph from "./components/DOTGraph/DOTGraph.vue";
 
-// export { FccButton }
+export { DOTGraph };
