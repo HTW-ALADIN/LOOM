@@ -1,7 +1,6 @@
 # LOOM
 
 LOOM is a component library for [CARPET](https://github.com/HTW-ALADIN/CARPET). It is built with Vue 3 and Vite.
-This template should help get you started developing with Vue 3 in Vite.
 
 ## Component catalog.
 
