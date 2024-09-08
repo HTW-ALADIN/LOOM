@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+// How to test Vue components with vitest:  https://blog.logrocket.com/guide-vitest-automated-testing-vue-components/#testing-vue-component-props-functions
 
 import { mount } from "@vue/test-utils";
 import DOTGraph from "./DOTGraph.vue";
