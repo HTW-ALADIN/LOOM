@@ -4,17 +4,17 @@ LOOM is a component library for [CARPET](https://github.com/HTW-ALADIN/CARPET). 
 
 <!-- https://shields.io/badges -->
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/:user/:repo/:workflow)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/:HTW-ALADIN/:LOOM/:deploy-github-pages.yaml)
 
 ## Component catalog.
 
-The available components are showcased in a Storybook. View it [here]().
+The available components are showcased in a [Storybook](htw-aladin.github.io/LOOM/).
 To run the Storybook locally, clone the repository and run `npm run storybook`.
 
 ## Add components.
 
 To add components to the library, create a new sub-directory in the `src/components` directory with the name of your new component.
-Eacg component should have its own `.vue` file for the rendering logic, a `.ts` file for the business and statemanagement logic, a `.stories.ts` file for documentation in Storybook and a `.test.ts` file for unit tests.
+Eacg component should have its own `.vue` file for the rendering logic, a `.ts` file for the business and statemanagement logic, a `.stories.ts` file for documentation in Storybook and a `.spec.ts` file for unit tests.
 Vue-components should be written as a [SFC](https://vuejs.org/guide/scaling-up/sfc.html) (Single File Component) with the [composition API](https://vuejs.org/guide/extras/composition-api-faq.html).
 The business logic should be encapsulated in a class that extends from the BaseComponent class in the `src/components/BaseComponent.ts`. This class provides the component with reactive properties and methods to update them. The entire state of the created component should be handled and exposed via those methods.
 To include the component in the npm-package, it has to be exported in the `index.ts` file in the `src` directory.

@@ -1,6 +1,7 @@
 {
   "name": "carpet-component-library",
   "version": "0.0.1",
+  "author": "Paul Christ",
   "files": [
     "dist"
   ],
