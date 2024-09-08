@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
-import { fn } from "@storybook/test";
 import DOTGraph from "@/components/DOTGraph/DOTGraph.vue";
 import { useStore } from "@/stores/Store";
 
