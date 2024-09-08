@@ -1,15 +1,15 @@
 {
-  "name": "loom",
+  "name": "carpet-component-library",
   "version": "0.0.1",
   "files": [
     "dist"
   ],
-  "main": "./dist/loom.umd.cjs",
-  "module": "./dist/loom.js",
+  "main": "./dist/carpet-component-library.umd.cjs",
+  "module": "./dist/carpet-component-library.js",
   "exports": {
     ".": {
-      "import": "./dist/loom.js",
-      "require": "./dist/loom.umd.cjs"
+      "import": "./dist/carpet-component-library.js",
+      "require": "./dist/carpet-component-library.umd.cjs"
     },
     "./style.css": "./dist/style.css"
   },
