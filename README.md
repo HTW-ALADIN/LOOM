@@ -19,19 +19,37 @@ Vue-components should be written as a [SFC](https://vuejs.org/guide/scaling-up/s
 The business logic should be encapsulated in a class that extends from the BaseComponent class in the `src/components/BaseComponent.ts`. This class provides the component with reactive properties and methods to update them. The entire state of the created component should be handled and exposed via those methods.
 To include the component in the npm-package, it has to be exported in the `index.ts` file in the `src` directory.
 
-## Recommended IDE Setup
+## Releases and Commit Schema
+
+This repository follows the [ConventionalCommits-Schema](https://www.conventionalcommits.org/en/v1.0.0/). This means that every commit should follow this schema:
+
+```
+<type>[optional scope]: <comment>
+
+<long description>
+
+<word-token> #<reference>
+```
+
+[Example](https://www.conventionalcommits.org/en/v1.0.0/#commit-message-with-multi-paragraph-body-and-multiple-footers).
+
+Releases are derived from the commit messages. The versioning is done automatically via [Semantic Versioning](https://semver.org/).
+
+## Development
+
+### Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
 
-## Type Support for `.vue` Imports in TS
+### Type Support for `.vue` Imports in TS
 
 TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
 
-## Customize configuration
+### Customize configuration
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-## Project Setup
+### Project Setup
 
 ```sh
 npm install
