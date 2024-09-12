@@ -9,7 +9,7 @@ LOOM is a component library for [CARPET](https://github.com/HTW-ALADIN/CARPET). 
 ## Component catalog.
 
 The available components are showcased in a [Storybook](htw-aladin.github.io/LOOM/).
-To run the Storybook locally, clone the repository and run `npm run storybook`.
+To run the Storybook locally, clone the repository, install all dependencies with `npm i` and then run `npm run storybook`.
 
 ## Add components.
 
