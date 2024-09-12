@@ -1,6 +1,5 @@
 import { JSONPath } from "jsonpath-plus";
-import type { Store, StateTree } from "pinia";
-import { computed } from "vue";
+import type { StateTree } from "pinia";
 
 // TODO: see capabilities of Typescripts Template Literal Types (regarding recursivity) or when and if RegEx-Types are available
 export type JSONPathSubExpression<T extends string = string> =
@@ -38,8 +37,8 @@ export interface StoreSetter {
   (payload: StoreSetterPayload): void;
 }
 
-export interface StoreAPI<State extends StateTree = {}> {
-  store?: StateTree;
+export interface StoreAPI<State extends StateTree = StateTree> {
+  store?: State;
   getProperty: StoreGetter;
   setProperty: StoreSetter;
 }
@@ -66,7 +65,7 @@ export const useStore = (store: StateTree): StoreAPI => {
   return {
     store: store,
     getProperty: (path: JSONPathExpression) => {
-      let result = JSONPath({ path: path, json: store });
+      const result = JSONPath({ path: path, json: store });
       if (result.length === 1) return result[0];
       else return result;
     },
