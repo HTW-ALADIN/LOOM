@@ -11,6 +11,7 @@ node_modules
 .DS_Store
 coverage
 *.local
+/storybook-static
 
 /cypress/videos/
 /cypress/screenshots/
