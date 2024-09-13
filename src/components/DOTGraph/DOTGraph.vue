@@ -45,7 +45,7 @@ const renderGraph = (description: string) => {
 const renderIfGraph = () => {
   let dotDescription = "";
   if (component.validate()) {
-    dotDescription = <string>getDOTDescription();
+    dotDescription = (<string>getDOTDescription()) as string;
   }
   renderGraph(dotDescription);
 };

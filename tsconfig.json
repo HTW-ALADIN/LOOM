@@ -12,8 +12,12 @@
     }
   ],
   "compilerOptions": {
+    "composite": true,
     "outDir": "dist",
-    "declaration": true
+    "declaration": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "exclude": ["src/App.vue", "src/main.ts"]
 }

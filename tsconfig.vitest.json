@@ -4,6 +4,9 @@
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.vitest.tsbuildinfo",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
 
     "lib": [],
     "types": ["node", "jsdom"]

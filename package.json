@@ -1,6 +1,6 @@
 {
   "name": "carpet-component-library",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "Paul Christ",
   "files": [
     "dist",
@@ -13,16 +13,22 @@
     "component",
     "library"
   ],
-  "main": "./dist/carpet-component-library.umd.cjs",
-  "module": "./dist/carpet-component-library.js",
+  "type": "module",
+  "main": "dist/carpet-component-library.umd.cjs",
   "exports": {
     ".": {
-      "import": "./dist/carpet-component-library.js",
-      "require": "./dist/carpet-component-library.umd.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/carpet-component-library.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/carpet-component-library.umd.cjs"
+      }
     },
     "./style.css": "./dist/style.css"
   },
-  "types": "./dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "engines": {
     "node": "22.8.0"
   },
