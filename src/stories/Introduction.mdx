@@ -57,7 +57,7 @@ export const RightArrow = () => (
     <div className="sb-section-item">
       <img
         src={Graph}
-        alt="Graph"
+        alt="Graph" 
       />
       <h4 className="sb-section-item-heading">Generate task instances with ALADIN</h4>
       <p className="sb-section-item-paragraph">Build task-generators with ALADINs DSL for specifying task-generators, to generate many task-instances, that learners can practice with. Generators in ALADIN provide many parameters, to adjust the complexitiy of the generated task-instances and thus adapt the task-complexity to the ability level of the learner.</p>
@@ -67,7 +67,7 @@ export const RightArrow = () => (
       >Learn more<RightArrow /></a>
     </div>
     <div className="sb-section-item">
-      <img src={Genie} alt="Genie" />
+      <img src={Genie} alt="Genie"  />
       <div>
         <h4 className="sb-section-item-heading">Create task-UIs and task-Generators visually with GENIE</h4>
         <p className="sb-section-item-paragraph">Create task-UIs and task-generators via GENIE in a user-friendly UI. GENIE abstracts the DSLs of ALADIN and CARPET and enables the visual specification of task-UIs and task-generators. It also allows for the live-execution and -debugging of task-UIs and task-generators.</p>
@@ -107,7 +107,8 @@ export const RightArrow = () => (
   }
 
   img {
-    object-fit: cover;
+  height: 130px;
+    object-fit: contain;
   }
 
   .sb-section-title {

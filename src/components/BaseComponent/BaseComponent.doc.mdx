@@ -1,0 +1,1190 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="src/components/BaseComponent/BaseComponent" />
+
+## SerialisedMethod
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+A description of a user-facing method of a component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface SerialisedMethod {
+    description: string;
+}
+
+```
+
+## SerialisedMethods
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+A map of method names and their descriptions.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface SerialisedMethods {
+    [methodName: string]: SerialisedMethod;
+}
+
+```
+
+## MethodImplementation
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+A method implementation.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface MethodImplementation {
+    (): void;
+}
+
+```
+
+## MethodImplementations
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+A map of method names and their implementations.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface MethodImplementations {
+    [methodName: string]: MethodImplementation;
+}
+
+```
+
+## ComponentProps
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The basic properties of a CARPET component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface ComponentProps {
+    componentID: number;
+    storeObject: StoreAPI;
+    componentPath: JSONPathExpression;
+    style?: StyleValue;
+}
+
+```
+
+## BaseComponentType
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *TypeAliasDeclaration*
+
+#### JSDoc annotations:
+
+The type of a component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export type BaseComponentType = string;
+
+```
+
+## SerialisedContextMenu
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *TypeAliasDeclaration*
+
+#### JSDoc annotations:
+
+The serialised context menu of a component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export type SerialisedContextMenu = {
+    isOpen: boolean;
+    usedMethods: Array<string>;
+};
+
+```
+
+## ValidationConfiguration
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *TypeAliasDeclaration*
+
+#### JSDoc annotations:
+
+The configuration of the validation of a component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export type ValidationConfiguration = {};
+
+```
+
+## SerialisedDependencies
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *TypeAliasDeclaration*
+
+#### JSDoc annotations:
+
+Serialised dependencies of a component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export type SerialisedDependencies = Record<string, JSONPathExpression>;
+
+```
+
+## ComponentDependencies
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *TypeAliasDeclaration*
+
+#### JSDoc annotations:
+
+The dependencies of a component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export type ComponentDependencies = Record<string, any>;
+
+```
+
+## NestedComponents
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *TypeAliasDeclaration*
+
+#### JSDoc annotations:
+
+Possible nested components of a component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export type NestedComponents = Record<string, BaseComponent>;
+
+```
+
+## ComponentData
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *TypeAliasDeclaration*
+
+#### JSDoc annotations:
+
+The data of a component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export type ComponentData = Record<string, any>;
+
+```
+
+## SerializedBaseComponent
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+Generic type description with defaults of a serialised base component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface SerializedBaseComponent<T extends BaseComponentType = BaseComponentType, D extends SerialisedDependencies = SerialisedDependencies, C extends ComponentData = ComponentData, SM extends SerialisedMethods = SerialisedMethods, SC extends SerialisedContextMenu = SerialisedContextMenu, NC extends NestedComponents = NestedComponents> {
+    type: T;
+    name: string;
+    isValid: boolean;
+    isCorrect: boolean;
+    dependencies: D;
+    component: C;
+    methods?: SM;
+    contextMenu?: SC;
+    nestedComponents?: NC;
+}
+
+```
+
+## BaseComponent
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *ClassDeclaration*
+
+#### JSDoc annotations:
+
+The BaseComponent class is the base class for all derived CARPET components.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export abstract class BaseComponent<C extends SerializedBaseComponent = SerializedBaseComponent, SD extends SerialisedDependencies = SerialisedDependencies, D extends ComponentDependencies = ComponentDependencies, CD extends ComponentData = ComponentData, SM extends SerialisedMethods = SerialisedMethods, M extends MethodImplementations = MethodImplementations, NC extends NestedComponents = NestedComponents> {
+    protected serializedBaseComponent: ComputedRef<C>;
+    protected dependencies: ComputedRef<D>;
+    constructor(protected storeObject: Ref<StoreAPI>, protected componentID: number, protected serialisedBaseComponentPath: JSONPathExpression) {
+        this.serializedBaseComponent = this.getComputedTaskGraphProperty<C>(serialisedBaseComponentPath);
+        this.dependencies = this.loadDependencies();
+    }
+    public checkDependency(dependencyPath: string) {
+        return computed(() => {
+            if (dependencyPath)
+                return ensurePathExists(dependencyPath);
+            return false;
+        });
+    }
+    public loadDependencies() {
+        this.dependencies = <ComputedRef<D>>computed(() => {
+            const dependencies: {
+                [key: string]: any;
+            } = {};
+            const dependencyPaths = this.getDependencyPaths();
+            for (const [dependencyName, dependencyPath] of Object.entries(unref(dependencyPaths))) {
+                const dependencyValue = unref(this.storeObject).getProperty(dependencyPath);
+                dependencies[dependencyName] = dependencyValue;
+            }
+            return dependencies;
+        });
+        return this.dependencies;
+    }
+    public getComponentData(): Ref<CD> {
+        return <Ref<CD>>ref(unref(this.serializedBaseComponent).component);
+    }
+    public getSerializedComponent(): Ref<C> {
+        return this.serializedBaseComponent;
+    }
+    public getDependencyPaths(): SD {
+        return <SD>unref(this.serializedBaseComponent).dependencies;
+    }
+    public getDependencies() {
+        return this.dependencies;
+    }
+    public getNestedComponents() {
+        return unref(this.serializedBaseComponent).nestedComponents;
+    }
+    public getNestedComponentPaths() {
+        const nestedComponents = this.getNestedComponents();
+        const nestedComponentsPaths = <{
+            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
+        }>{};
+        for (const nestedComponentName in nestedComponents) {
+            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
+                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
+        }
+        return nestedComponentsPaths;
+    }
+    protected abstract validate(): void;
+    public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
+        return computed<T>(() => unref(this.storeObject).getProperty(taskGraphPath));
+    };
+    public getSelectedMethods = (methodImplementations: M): M => {
+        const methods = <SM>unref(this.serializedBaseComponent).methods;
+        return Object.entries(methods).reduce((selectedMethods, [methodName, methodDefinition]) => {
+            const { description } = methodDefinition;
+            return { ...selectedMethods, [description]: methodImplementations[methodName] };
+        }, <M>{});
+    };
+}
+
+```
+
+## checkDependency
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+Check if dependencies exists in the store.
+
+```bash
+@param dependencyPath
+
+@returns boolean
+```
+
+#### Code:
+
+```ts
+export abstract class BaseComponent<C extends SerializedBaseComponent = SerializedBaseComponent, SD extends SerialisedDependencies = SerialisedDependencies, D extends ComponentDependencies = ComponentDependencies, CD extends ComponentData = ComponentData, SM extends SerialisedMethods = SerialisedMethods, M extends MethodImplementations = MethodImplementations, NC extends NestedComponents = NestedComponents> {
+    protected serializedBaseComponent: ComputedRef<C>;
+    protected dependencies: ComputedRef<D>;
+    constructor(protected storeObject: Ref<StoreAPI>, protected componentID: number, protected serialisedBaseComponentPath: JSONPathExpression) {
+        this.serializedBaseComponent = this.getComputedTaskGraphProperty<C>(serialisedBaseComponentPath);
+        this.dependencies = this.loadDependencies();
+    }
+    public checkDependency(dependencyPath: string) {
+        return computed(() => {
+            if (dependencyPath)
+                return ensurePathExists(dependencyPath);
+            return false;
+        });
+    }
+    public loadDependencies() {
+        this.dependencies = <ComputedRef<D>>computed(() => {
+            const dependencies: {
+                [key: string]: any;
+            } = {};
+            const dependencyPaths = this.getDependencyPaths();
+            for (const [dependencyName, dependencyPath] of Object.entries(unref(dependencyPaths))) {
+                const dependencyValue = unref(this.storeObject).getProperty(dependencyPath);
+                dependencies[dependencyName] = dependencyValue;
+            }
+            return dependencies;
+        });
+        return this.dependencies;
+    }
+    public getComponentData(): Ref<CD> {
+        return <Ref<CD>>ref(unref(this.serializedBaseComponent).component);
+    }
+    public getSerializedComponent(): Ref<C> {
+        return this.serializedBaseComponent;
+    }
+    public getDependencyPaths(): SD {
+        return <SD>unref(this.serializedBaseComponent).dependencies;
+    }
+    public getDependencies() {
+        return this.dependencies;
+    }
+    public getNestedComponents() {
+        return unref(this.serializedBaseComponent).nestedComponents;
+    }
+    public getNestedComponentPaths() {
+        const nestedComponents = this.getNestedComponents();
+        const nestedComponentsPaths = <{
+            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
+        }>{};
+        for (const nestedComponentName in nestedComponents) {
+            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
+                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
+        }
+        return nestedComponentsPaths;
+    }
+    protected abstract validate(): void;
+    public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
+        return computed<T>(() => unref(this.storeObject).getProperty(taskGraphPath));
+    };
+    public getSelectedMethods = (methodImplementations: M): M => {
+        const methods = <SM>unref(this.serializedBaseComponent).methods;
+        return Object.entries(methods).reduce((selectedMethods, [methodName, methodDefinition]) => {
+            const { description } = methodDefinition;
+            return { ...selectedMethods, [description]: methodImplementations[methodName] };
+        }, <M>{});
+    };
+}
+
+```
+
+## loadDependencies
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+Load the dependencies of the component.
+
+```bash
+@returns ComputedRef<D>
+```
+
+#### Code:
+
+```ts
+export abstract class BaseComponent<C extends SerializedBaseComponent = SerializedBaseComponent, SD extends SerialisedDependencies = SerialisedDependencies, D extends ComponentDependencies = ComponentDependencies, CD extends ComponentData = ComponentData, SM extends SerialisedMethods = SerialisedMethods, M extends MethodImplementations = MethodImplementations, NC extends NestedComponents = NestedComponents> {
+    protected serializedBaseComponent: ComputedRef<C>;
+    protected dependencies: ComputedRef<D>;
+    constructor(protected storeObject: Ref<StoreAPI>, protected componentID: number, protected serialisedBaseComponentPath: JSONPathExpression) {
+        this.serializedBaseComponent = this.getComputedTaskGraphProperty<C>(serialisedBaseComponentPath);
+        this.dependencies = this.loadDependencies();
+    }
+    public checkDependency(dependencyPath: string) {
+        return computed(() => {
+            if (dependencyPath)
+                return ensurePathExists(dependencyPath);
+            return false;
+        });
+    }
+    public loadDependencies() {
+        this.dependencies = <ComputedRef<D>>computed(() => {
+            const dependencies: {
+                [key: string]: any;
+            } = {};
+            const dependencyPaths = this.getDependencyPaths();
+            for (const [dependencyName, dependencyPath] of Object.entries(unref(dependencyPaths))) {
+                const dependencyValue = unref(this.storeObject).getProperty(dependencyPath);
+                dependencies[dependencyName] = dependencyValue;
+            }
+            return dependencies;
+        });
+        return this.dependencies;
+    }
+    public getComponentData(): Ref<CD> {
+        return <Ref<CD>>ref(unref(this.serializedBaseComponent).component);
+    }
+    public getSerializedComponent(): Ref<C> {
+        return this.serializedBaseComponent;
+    }
+    public getDependencyPaths(): SD {
+        return <SD>unref(this.serializedBaseComponent).dependencies;
+    }
+    public getDependencies() {
+        return this.dependencies;
+    }
+    public getNestedComponents() {
+        return unref(this.serializedBaseComponent).nestedComponents;
+    }
+    public getNestedComponentPaths() {
+        const nestedComponents = this.getNestedComponents();
+        const nestedComponentsPaths = <{
+            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
+        }>{};
+        for (const nestedComponentName in nestedComponents) {
+            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
+                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
+        }
+        return nestedComponentsPaths;
+    }
+    protected abstract validate(): void;
+    public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
+        return computed<T>(() => unref(this.storeObject).getProperty(taskGraphPath));
+    };
+    public getSelectedMethods = (methodImplementations: M): M => {
+        const methods = <SM>unref(this.serializedBaseComponent).methods;
+        return Object.entries(methods).reduce((selectedMethods, [methodName, methodDefinition]) => {
+            const { description } = methodDefinition;
+            return { ...selectedMethods, [description]: methodImplementations[methodName] };
+        }, <M>{});
+    };
+}
+
+```
+
+## getComponentData
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+Getter function to get the component data.
+
+```bash
+@returns Ref<CD>
+```
+
+#### Code:
+
+```ts
+export abstract class BaseComponent<C extends SerializedBaseComponent = SerializedBaseComponent, SD extends SerialisedDependencies = SerialisedDependencies, D extends ComponentDependencies = ComponentDependencies, CD extends ComponentData = ComponentData, SM extends SerialisedMethods = SerialisedMethods, M extends MethodImplementations = MethodImplementations, NC extends NestedComponents = NestedComponents> {
+    protected serializedBaseComponent: ComputedRef<C>;
+    protected dependencies: ComputedRef<D>;
+    constructor(protected storeObject: Ref<StoreAPI>, protected componentID: number, protected serialisedBaseComponentPath: JSONPathExpression) {
+        this.serializedBaseComponent = this.getComputedTaskGraphProperty<C>(serialisedBaseComponentPath);
+        this.dependencies = this.loadDependencies();
+    }
+    public checkDependency(dependencyPath: string) {
+        return computed(() => {
+            if (dependencyPath)
+                return ensurePathExists(dependencyPath);
+            return false;
+        });
+    }
+    public loadDependencies() {
+        this.dependencies = <ComputedRef<D>>computed(() => {
+            const dependencies: {
+                [key: string]: any;
+            } = {};
+            const dependencyPaths = this.getDependencyPaths();
+            for (const [dependencyName, dependencyPath] of Object.entries(unref(dependencyPaths))) {
+                const dependencyValue = unref(this.storeObject).getProperty(dependencyPath);
+                dependencies[dependencyName] = dependencyValue;
+            }
+            return dependencies;
+        });
+        return this.dependencies;
+    }
+    public getComponentData(): Ref<CD> {
+        return <Ref<CD>>ref(unref(this.serializedBaseComponent).component);
+    }
+    public getSerializedComponent(): Ref<C> {
+        return this.serializedBaseComponent;
+    }
+    public getDependencyPaths(): SD {
+        return <SD>unref(this.serializedBaseComponent).dependencies;
+    }
+    public getDependencies() {
+        return this.dependencies;
+    }
+    public getNestedComponents() {
+        return unref(this.serializedBaseComponent).nestedComponents;
+    }
+    public getNestedComponentPaths() {
+        const nestedComponents = this.getNestedComponents();
+        const nestedComponentsPaths = <{
+            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
+        }>{};
+        for (const nestedComponentName in nestedComponents) {
+            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
+                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
+        }
+        return nestedComponentsPaths;
+    }
+    protected abstract validate(): void;
+    public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
+        return computed<T>(() => unref(this.storeObject).getProperty(taskGraphPath));
+    };
+    public getSelectedMethods = (methodImplementations: M): M => {
+        const methods = <SM>unref(this.serializedBaseComponent).methods;
+        return Object.entries(methods).reduce((selectedMethods, [methodName, methodDefinition]) => {
+            const { description } = methodDefinition;
+            return { ...selectedMethods, [description]: methodImplementations[methodName] };
+        }, <M>{});
+    };
+}
+
+```
+
+## getSerializedComponent
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+Getter function to get the component serialisation.
+
+```bash
+@returns Ref<C>
+```
+
+#### Code:
+
+```ts
+export abstract class BaseComponent<C extends SerializedBaseComponent = SerializedBaseComponent, SD extends SerialisedDependencies = SerialisedDependencies, D extends ComponentDependencies = ComponentDependencies, CD extends ComponentData = ComponentData, SM extends SerialisedMethods = SerialisedMethods, M extends MethodImplementations = MethodImplementations, NC extends NestedComponents = NestedComponents> {
+    protected serializedBaseComponent: ComputedRef<C>;
+    protected dependencies: ComputedRef<D>;
+    constructor(protected storeObject: Ref<StoreAPI>, protected componentID: number, protected serialisedBaseComponentPath: JSONPathExpression) {
+        this.serializedBaseComponent = this.getComputedTaskGraphProperty<C>(serialisedBaseComponentPath);
+        this.dependencies = this.loadDependencies();
+    }
+    public checkDependency(dependencyPath: string) {
+        return computed(() => {
+            if (dependencyPath)
+                return ensurePathExists(dependencyPath);
+            return false;
+        });
+    }
+    public loadDependencies() {
+        this.dependencies = <ComputedRef<D>>computed(() => {
+            const dependencies: {
+                [key: string]: any;
+            } = {};
+            const dependencyPaths = this.getDependencyPaths();
+            for (const [dependencyName, dependencyPath] of Object.entries(unref(dependencyPaths))) {
+                const dependencyValue = unref(this.storeObject).getProperty(dependencyPath);
+                dependencies[dependencyName] = dependencyValue;
+            }
+            return dependencies;
+        });
+        return this.dependencies;
+    }
+    public getComponentData(): Ref<CD> {
+        return <Ref<CD>>ref(unref(this.serializedBaseComponent).component);
+    }
+    public getSerializedComponent(): Ref<C> {
+        return this.serializedBaseComponent;
+    }
+    public getDependencyPaths(): SD {
+        return <SD>unref(this.serializedBaseComponent).dependencies;
+    }
+    public getDependencies() {
+        return this.dependencies;
+    }
+    public getNestedComponents() {
+        return unref(this.serializedBaseComponent).nestedComponents;
+    }
+    public getNestedComponentPaths() {
+        const nestedComponents = this.getNestedComponents();
+        const nestedComponentsPaths = <{
+            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
+        }>{};
+        for (const nestedComponentName in nestedComponents) {
+            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
+                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
+        }
+        return nestedComponentsPaths;
+    }
+    protected abstract validate(): void;
+    public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
+        return computed<T>(() => unref(this.storeObject).getProperty(taskGraphPath));
+    };
+    public getSelectedMethods = (methodImplementations: M): M => {
+        const methods = <SM>unref(this.serializedBaseComponent).methods;
+        return Object.entries(methods).reduce((selectedMethods, [methodName, methodDefinition]) => {
+            const { description } = methodDefinition;
+            return { ...selectedMethods, [description]: methodImplementations[methodName] };
+        }, <M>{});
+    };
+}
+
+```
+
+## getDependencyPaths
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+Getter function to get the component dependency paths
+
+```bash
+@returns SD
+```
+
+#### Code:
+
+```ts
+export abstract class BaseComponent<C extends SerializedBaseComponent = SerializedBaseComponent, SD extends SerialisedDependencies = SerialisedDependencies, D extends ComponentDependencies = ComponentDependencies, CD extends ComponentData = ComponentData, SM extends SerialisedMethods = SerialisedMethods, M extends MethodImplementations = MethodImplementations, NC extends NestedComponents = NestedComponents> {
+    protected serializedBaseComponent: ComputedRef<C>;
+    protected dependencies: ComputedRef<D>;
+    constructor(protected storeObject: Ref<StoreAPI>, protected componentID: number, protected serialisedBaseComponentPath: JSONPathExpression) {
+        this.serializedBaseComponent = this.getComputedTaskGraphProperty<C>(serialisedBaseComponentPath);
+        this.dependencies = this.loadDependencies();
+    }
+    public checkDependency(dependencyPath: string) {
+        return computed(() => {
+            if (dependencyPath)
+                return ensurePathExists(dependencyPath);
+            return false;
+        });
+    }
+    public loadDependencies() {
+        this.dependencies = <ComputedRef<D>>computed(() => {
+            const dependencies: {
+                [key: string]: any;
+            } = {};
+            const dependencyPaths = this.getDependencyPaths();
+            for (const [dependencyName, dependencyPath] of Object.entries(unref(dependencyPaths))) {
+                const dependencyValue = unref(this.storeObject).getProperty(dependencyPath);
+                dependencies[dependencyName] = dependencyValue;
+            }
+            return dependencies;
+        });
+        return this.dependencies;
+    }
+    public getComponentData(): Ref<CD> {
+        return <Ref<CD>>ref(unref(this.serializedBaseComponent).component);
+    }
+    public getSerializedComponent(): Ref<C> {
+        return this.serializedBaseComponent;
+    }
+    public getDependencyPaths(): SD {
+        return <SD>unref(this.serializedBaseComponent).dependencies;
+    }
+    public getDependencies() {
+        return this.dependencies;
+    }
+    public getNestedComponents() {
+        return unref(this.serializedBaseComponent).nestedComponents;
+    }
+    public getNestedComponentPaths() {
+        const nestedComponents = this.getNestedComponents();
+        const nestedComponentsPaths = <{
+            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
+        }>{};
+        for (const nestedComponentName in nestedComponents) {
+            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
+                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
+        }
+        return nestedComponentsPaths;
+    }
+    protected abstract validate(): void;
+    public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
+        return computed<T>(() => unref(this.storeObject).getProperty(taskGraphPath));
+    };
+    public getSelectedMethods = (methodImplementations: M): M => {
+        const methods = <SM>unref(this.serializedBaseComponent).methods;
+        return Object.entries(methods).reduce((selectedMethods, [methodName, methodDefinition]) => {
+            const { description } = methodDefinition;
+            return { ...selectedMethods, [description]: methodImplementations[methodName] };
+        }, <M>{});
+    };
+}
+
+```
+
+## getDependencies
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+Getter function to get the component dependencies
+
+```bash
+@returns ComputedRef<D>
+```
+
+#### Code:
+
+```ts
+export abstract class BaseComponent<C extends SerializedBaseComponent = SerializedBaseComponent, SD extends SerialisedDependencies = SerialisedDependencies, D extends ComponentDependencies = ComponentDependencies, CD extends ComponentData = ComponentData, SM extends SerialisedMethods = SerialisedMethods, M extends MethodImplementations = MethodImplementations, NC extends NestedComponents = NestedComponents> {
+    protected serializedBaseComponent: ComputedRef<C>;
+    protected dependencies: ComputedRef<D>;
+    constructor(protected storeObject: Ref<StoreAPI>, protected componentID: number, protected serialisedBaseComponentPath: JSONPathExpression) {
+        this.serializedBaseComponent = this.getComputedTaskGraphProperty<C>(serialisedBaseComponentPath);
+        this.dependencies = this.loadDependencies();
+    }
+    public checkDependency(dependencyPath: string) {
+        return computed(() => {
+            if (dependencyPath)
+                return ensurePathExists(dependencyPath);
+            return false;
+        });
+    }
+    public loadDependencies() {
+        this.dependencies = <ComputedRef<D>>computed(() => {
+            const dependencies: {
+                [key: string]: any;
+            } = {};
+            const dependencyPaths = this.getDependencyPaths();
+            for (const [dependencyName, dependencyPath] of Object.entries(unref(dependencyPaths))) {
+                const dependencyValue = unref(this.storeObject).getProperty(dependencyPath);
+                dependencies[dependencyName] = dependencyValue;
+            }
+            return dependencies;
+        });
+        return this.dependencies;
+    }
+    public getComponentData(): Ref<CD> {
+        return <Ref<CD>>ref(unref(this.serializedBaseComponent).component);
+    }
+    public getSerializedComponent(): Ref<C> {
+        return this.serializedBaseComponent;
+    }
+    public getDependencyPaths(): SD {
+        return <SD>unref(this.serializedBaseComponent).dependencies;
+    }
+    public getDependencies() {
+        return this.dependencies;
+    }
+    public getNestedComponents() {
+        return unref(this.serializedBaseComponent).nestedComponents;
+    }
+    public getNestedComponentPaths() {
+        const nestedComponents = this.getNestedComponents();
+        const nestedComponentsPaths = <{
+            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
+        }>{};
+        for (const nestedComponentName in nestedComponents) {
+            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
+                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
+        }
+        return nestedComponentsPaths;
+    }
+    protected abstract validate(): void;
+    public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
+        return computed<T>(() => unref(this.storeObject).getProperty(taskGraphPath));
+    };
+    public getSelectedMethods = (methodImplementations: M): M => {
+        const methods = <SM>unref(this.serializedBaseComponent).methods;
+        return Object.entries(methods).reduce((selectedMethods, [methodName, methodDefinition]) => {
+            const { description } = methodDefinition;
+            return { ...selectedMethods, [description]: methodImplementations[methodName] };
+        }, <M>{});
+    };
+}
+
+```
+
+## getNestedComponents
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+Getter function to get the nested components
+
+```bash
+@returns ComputedRef<NC>
+```
+
+#### Code:
+
+```ts
+export abstract class BaseComponent<C extends SerializedBaseComponent = SerializedBaseComponent, SD extends SerialisedDependencies = SerialisedDependencies, D extends ComponentDependencies = ComponentDependencies, CD extends ComponentData = ComponentData, SM extends SerialisedMethods = SerialisedMethods, M extends MethodImplementations = MethodImplementations, NC extends NestedComponents = NestedComponents> {
+    protected serializedBaseComponent: ComputedRef<C>;
+    protected dependencies: ComputedRef<D>;
+    constructor(protected storeObject: Ref<StoreAPI>, protected componentID: number, protected serialisedBaseComponentPath: JSONPathExpression) {
+        this.serializedBaseComponent = this.getComputedTaskGraphProperty<C>(serialisedBaseComponentPath);
+        this.dependencies = this.loadDependencies();
+    }
+    public checkDependency(dependencyPath: string) {
+        return computed(() => {
+            if (dependencyPath)
+                return ensurePathExists(dependencyPath);
+            return false;
+        });
+    }
+    public loadDependencies() {
+        this.dependencies = <ComputedRef<D>>computed(() => {
+            const dependencies: {
+                [key: string]: any;
+            } = {};
+            const dependencyPaths = this.getDependencyPaths();
+            for (const [dependencyName, dependencyPath] of Object.entries(unref(dependencyPaths))) {
+                const dependencyValue = unref(this.storeObject).getProperty(dependencyPath);
+                dependencies[dependencyName] = dependencyValue;
+            }
+            return dependencies;
+        });
+        return this.dependencies;
+    }
+    public getComponentData(): Ref<CD> {
+        return <Ref<CD>>ref(unref(this.serializedBaseComponent).component);
+    }
+    public getSerializedComponent(): Ref<C> {
+        return this.serializedBaseComponent;
+    }
+    public getDependencyPaths(): SD {
+        return <SD>unref(this.serializedBaseComponent).dependencies;
+    }
+    public getDependencies() {
+        return this.dependencies;
+    }
+    public getNestedComponents() {
+        return unref(this.serializedBaseComponent).nestedComponents;
+    }
+    public getNestedComponentPaths() {
+        const nestedComponents = this.getNestedComponents();
+        const nestedComponentsPaths = <{
+            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
+        }>{};
+        for (const nestedComponentName in nestedComponents) {
+            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
+                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
+        }
+        return nestedComponentsPaths;
+    }
+    protected abstract validate(): void;
+    public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
+        return computed<T>(() => unref(this.storeObject).getProperty(taskGraphPath));
+    };
+    public getSelectedMethods = (methodImplementations: M): M => {
+        const methods = <SM>unref(this.serializedBaseComponent).methods;
+        return Object.entries(methods).reduce((selectedMethods, [methodName, methodDefinition]) => {
+            const { description } = methodDefinition;
+            return { ...selectedMethods, [description]: methodImplementations[methodName] };
+        }, <M>{});
+    };
+}
+
+```
+
+## getNestedComponentPaths
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+Getter function to get the nested component paths
+
+```bash
+@returns ComputedRef<{ [nestedComponentName in KeyOfType<NC>]: JSONPathExpression }>
+```
+
+#### Code:
+
+```ts
+export abstract class BaseComponent<C extends SerializedBaseComponent = SerializedBaseComponent, SD extends SerialisedDependencies = SerialisedDependencies, D extends ComponentDependencies = ComponentDependencies, CD extends ComponentData = ComponentData, SM extends SerialisedMethods = SerialisedMethods, M extends MethodImplementations = MethodImplementations, NC extends NestedComponents = NestedComponents> {
+    protected serializedBaseComponent: ComputedRef<C>;
+    protected dependencies: ComputedRef<D>;
+    constructor(protected storeObject: Ref<StoreAPI>, protected componentID: number, protected serialisedBaseComponentPath: JSONPathExpression) {
+        this.serializedBaseComponent = this.getComputedTaskGraphProperty<C>(serialisedBaseComponentPath);
+        this.dependencies = this.loadDependencies();
+    }
+    public checkDependency(dependencyPath: string) {
+        return computed(() => {
+            if (dependencyPath)
+                return ensurePathExists(dependencyPath);
+            return false;
+        });
+    }
+    public loadDependencies() {
+        this.dependencies = <ComputedRef<D>>computed(() => {
+            const dependencies: {
+                [key: string]: any;
+            } = {};
+            const dependencyPaths = this.getDependencyPaths();
+            for (const [dependencyName, dependencyPath] of Object.entries(unref(dependencyPaths))) {
+                const dependencyValue = unref(this.storeObject).getProperty(dependencyPath);
+                dependencies[dependencyName] = dependencyValue;
+            }
+            return dependencies;
+        });
+        return this.dependencies;
+    }
+    public getComponentData(): Ref<CD> {
+        return <Ref<CD>>ref(unref(this.serializedBaseComponent).component);
+    }
+    public getSerializedComponent(): Ref<C> {
+        return this.serializedBaseComponent;
+    }
+    public getDependencyPaths(): SD {
+        return <SD>unref(this.serializedBaseComponent).dependencies;
+    }
+    public getDependencies() {
+        return this.dependencies;
+    }
+    public getNestedComponents() {
+        return unref(this.serializedBaseComponent).nestedComponents;
+    }
+    public getNestedComponentPaths() {
+        const nestedComponents = this.getNestedComponents();
+        const nestedComponentsPaths = <{
+            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
+        }>{};
+        for (const nestedComponentName in nestedComponents) {
+            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
+                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
+        }
+        return nestedComponentsPaths;
+    }
+    protected abstract validate(): void;
+    public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
+        return computed<T>(() => unref(this.storeObject).getProperty(taskGraphPath));
+    };
+    public getSelectedMethods = (methodImplementations: M): M => {
+        const methods = <SM>unref(this.serializedBaseComponent).methods;
+        return Object.entries(methods).reduce((selectedMethods, [methodName, methodDefinition]) => {
+            const { description } = methodDefinition;
+            return { ...selectedMethods, [description]: methodImplementations[methodName] };
+        }, <M>{});
+    };
+}
+
+```
+
+## validate
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+Validation function to validate the component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export abstract class BaseComponent<C extends SerializedBaseComponent = SerializedBaseComponent, SD extends SerialisedDependencies = SerialisedDependencies, D extends ComponentDependencies = ComponentDependencies, CD extends ComponentData = ComponentData, SM extends SerialisedMethods = SerialisedMethods, M extends MethodImplementations = MethodImplementations, NC extends NestedComponents = NestedComponents> {
+    protected serializedBaseComponent: ComputedRef<C>;
+    protected dependencies: ComputedRef<D>;
+    constructor(protected storeObject: Ref<StoreAPI>, protected componentID: number, protected serialisedBaseComponentPath: JSONPathExpression) {
+        this.serializedBaseComponent = this.getComputedTaskGraphProperty<C>(serialisedBaseComponentPath);
+        this.dependencies = this.loadDependencies();
+    }
+    public checkDependency(dependencyPath: string) {
+        return computed(() => {
+            if (dependencyPath)
+                return ensurePathExists(dependencyPath);
+            return false;
+        });
+    }
+    public loadDependencies() {
+        this.dependencies = <ComputedRef<D>>computed(() => {
+            const dependencies: {
+                [key: string]: any;
+            } = {};
+            const dependencyPaths = this.getDependencyPaths();
+            for (const [dependencyName, dependencyPath] of Object.entries(unref(dependencyPaths))) {
+                const dependencyValue = unref(this.storeObject).getProperty(dependencyPath);
+                dependencies[dependencyName] = dependencyValue;
+            }
+            return dependencies;
+        });
+        return this.dependencies;
+    }
+    public getComponentData(): Ref<CD> {
+        return <Ref<CD>>ref(unref(this.serializedBaseComponent).component);
+    }
+    public getSerializedComponent(): Ref<C> {
+        return this.serializedBaseComponent;
+    }
+    public getDependencyPaths(): SD {
+        return <SD>unref(this.serializedBaseComponent).dependencies;
+    }
+    public getDependencies() {
+        return this.dependencies;
+    }
+    public getNestedComponents() {
+        return unref(this.serializedBaseComponent).nestedComponents;
+    }
+    public getNestedComponentPaths() {
+        const nestedComponents = this.getNestedComponents();
+        const nestedComponentsPaths = <{
+            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
+        }>{};
+        for (const nestedComponentName in nestedComponents) {
+            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
+                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
+        }
+        return nestedComponentsPaths;
+    }
+    protected abstract validate(): void;
+    public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
+        return computed<T>(() => unref(this.storeObject).getProperty(taskGraphPath));
+    };
+    public getSelectedMethods = (methodImplementations: M): M => {
+        const methods = <SM>unref(this.serializedBaseComponent).methods;
+        return Object.entries(methods).reduce((selectedMethods, [methodName, methodDefinition]) => {
+            const { description } = methodDefinition;
+            return { ...selectedMethods, [description]: methodImplementations[methodName] };
+        }, <M>{});
+    };
+}
+
+```
+
+## 
+**AST Node Type:** *PropertyDeclaration*
+
+#### JSDoc annotations:
+
+Helper function to get a computed property from the store.
+
+```bash
+@param taskGraphPath
+
+@returns ComputedRef<T>
+```
+
+#### Code:
+
+```ts
+getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
+    return computed<T>(() => unref(this.storeObject).getProperty(taskGraphPath));
+};
+
+```
+
+## 
+**AST Node Type:** *PropertyDeclaration*
+
+#### JSDoc annotations:
+
+Getter function to get the selected methods.
+
+```bash
+@param methodImplementations
+
+@returns
+```
+
+#### Code:
+
+```ts
+getSelectedMethods = (methodImplementations: M): M => {
+    const methods = <SM>unref(this.serializedBaseComponent).methods;
+    return Object.entries(methods).reduce((selectedMethods, [methodName, methodDefinition]) => {
+        const { description } = methodDefinition;
+        return { ...selectedMethods, [description]: methodImplementations[methodName] };
+    }, <M>{});
+};
+
+```
+

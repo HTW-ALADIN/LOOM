@@ -1,0 +1,244 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="src/stores/Store" />
+
+## JSONPathSubExpression
+`src/stores/Store`
+
+**AST Node Type:** *TypeAliasDeclaration*
+
+#### JSDoc annotations:
+
+The JSONPathSubExpression type is used to define JSONPath sub-expression, according to the working standard (https://www.ietf.org/archive/id/draft-goessner-dispatch-jsonpath-00.html).
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export type JSONPathSubExpression<T extends string = string> = T | `${T}.${T}` | `${T}..${T}` | `${T}[${T}]` | `${T}[*]` | `${T}[${T | "*" | ""}]` | `${T}[${T}:${T}:${T}]` | `${T}[?(${T})]` | `${T}(${T})` | `${T}(@${T})` | `${T}[${T},${T}]`;
+
+```
+
+## JSONPathExpression
+`src/stores/Store`
+
+**AST Node Type:** *TypeAliasDeclaration*
+
+#### JSDoc annotations:
+
+The JSONPathExpression type is used to define a JSONPath expression.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export type JSONPathExpression = `$` | `$.${JSONPathSubExpression}`;
+
+```
+
+## StoreGetter
+`src/stores/Store`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The StoreGetter function is used to get a value from the store.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface StoreGetter {
+    (path: JSONPathExpression): any;
+}
+
+```
+
+## StoreSetterMetaData
+`src/stores/Store`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The StoreSetterMetaData interface is used to pass additional information to the StoreSetter function.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface StoreSetterMetaData {
+    [key: string]: any;
+}
+
+```
+
+## StoreSetterPayload
+`src/stores/Store`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The StoreSetterPayload interface is used to pass the necessary information to the StoreSetter function.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface StoreSetterPayload {
+    path: JSONPathExpression;
+    value: any;
+    metadata?: StoreSetterMetaData;
+}
+
+```
+
+## StoreSetter
+`src/stores/Store`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The StoreSetter function is used to set a value in the store.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface StoreSetter {
+    (payload: StoreSetterPayload): void;
+}
+
+```
+
+## StoreAPI
+`src/stores/Store`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The StoreAPI interface provides the set of methods, with which the components can interact with the store.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface StoreAPI<State extends StateTree = StateTree> {
+    store?: State;
+    getProperty: StoreGetter;
+    setProperty: StoreSetter;
+}
+
+```
+
+## ensurePathExists
+`src/stores/Store`
+
+**AST Node Type:** *VariableStatement*
+
+#### JSDoc annotations:
+
+Helper function, to determine if a path exists in the store.
+
+```bash
+@param path JSONPath expression
+
+@returns boolean
+```
+
+#### Code:
+
+```ts
+export const ensurePathExists = (path: string) => {
+    if (typeof path !== "string") {
+        throw new Error(`Path is not a string: ${path}`);
+    }
+    const splitPath = JSONPath.toPathArray(path).slice(1);
+    let subState = <any>this;
+    let pathIsValid = true;
+    for (let depth = 0; depth < splitPath.length; depth++) {
+        if (splitPath[depth] in subState) {
+            subState = subState[splitPath[depth]];
+        }
+        else {
+            pathIsValid = false;
+            break;
+        }
+    }
+    return pathIsValid;
+};
+
+```
+
+## useStore
+`src/stores/Store`
+
+**AST Node Type:** *VariableStatement*
+
+#### JSDoc annotations:
+
+MockStore for testing purposes.
+
+```bash
+@param store A store object, consisting of keys and values.
+
+@returns StoreAPI
+```
+
+#### Code:
+
+```ts
+export const useStore = (store: StateTree): StoreAPI => {
+    return {
+        store: store,
+        getProperty: (path: JSONPathExpression) => {
+            const result = JSONPath({ path: path, json: store });
+            if (result.length === 1)
+                return result[0];
+            else
+                return result;
+        },
+        setProperty: (payload: StoreSetterPayload) => {
+            const { path, value } = payload;
+            const splitPath = JSONPath.toPathArray(path).slice(1);
+            let subState = store;
+            for (let depth = 0; depth < splitPath.length; depth++) {
+                if (depth === splitPath.length - 1) {
+                    if (subState[splitPath[depth]] != value) {
+                        subState[splitPath[depth]] = value;
+                    }
+                }
+                else
+                    subState = subState[splitPath[depth]];
+            }
+        }
+    };
+};
+
+```
+

@@ -1,0 +1,197 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="src/components/DOTGraph/DOTGraph" />
+
+## DOTGraphProps
+`src/components/DOTGraph/DOTGraph`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The DOTGraphProps interface is used to define the properties of the DOTGraph component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface DOTGraphProps extends ComponentProps {
+    graphID?: string | number;
+}
+
+```
+
+## DOTGraphComponentType
+`src/components/DOTGraph/DOTGraph`
+
+**AST Node Type:** *TypeAliasDeclaration*
+
+#### JSDoc annotations:
+
+The type of the DOTGraph component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export type DOTGraphComponentType = "DOTGraph";
+
+```
+
+## SerializedDOTGraphDependencies
+`src/components/DOTGraph/DOTGraph`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The DOTGraph-component requires a valid dotDescription to display.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface SerializedDOTGraphDependencies extends SerialisedDependencies {
+    dotDescription: JSONPathExpression;
+}
+
+```
+
+## DOTGraphDependencies
+`src/components/DOTGraph/DOTGraph`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The DOTGraph-component requires a valid dotDescription to display.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface DOTGraphDependencies extends ComponentDependencies {
+    dotDescription: ComputedRef<string>;
+}
+
+```
+
+## DotGraphComponentData
+`src/components/DOTGraph/DOTGraph`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The DOTGraph-component may hold a static dotDescription in its componentData.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface DotGraphComponentData extends ComponentData {
+    dotDescription?: string;
+}
+
+```
+
+## SerializedDOTGraphComponent
+`src/components/DOTGraph/DOTGraph`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The SerializedDOTGraphComponent interface is used to define the serialised properties of the DOTGraph component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface SerializedDOTGraphComponent extends SerializedBaseComponent<DOTGraphComponentType, SerializedDOTGraphDependencies, DotGraphComponentData> {
+}
+
+```
+
+## DOTGraphComponent
+`src/components/DOTGraph/DOTGraph`
+
+**AST Node Type:** *ClassDeclaration*
+
+#### JSDoc annotations:
+
+The DOTGraphComponent class is a derived taskComponent, that displays a Graph specified in the Graphviz-DOT language.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export class DOTGraphComponent extends BaseComponent<SerializedDOTGraphComponent, SerializedDOTGraphDependencies, DOTGraphDependencies, DotGraphComponentData> {
+    public validate() {
+        let isValid = false;
+        const dependencies = this.loadDependencies();
+        if (unref(unref(dependencies).dotDescription) !== "")
+            isValid = true;
+        unref(this.storeObject).setProperty({
+            path: `${this.serialisedBaseComponentPath}.isValid`,
+            value: isValid
+        });
+        return isValid;
+    }
+}
+
+```
+
+## validate
+`src/components/DOTGraph/DOTGraph`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+A DOTGraphComponent is valid, if it has a valid dotDescription.
+
+```bash
+@returns
+```
+
+#### Code:
+
+```ts
+export class DOTGraphComponent extends BaseComponent<SerializedDOTGraphComponent, SerializedDOTGraphDependencies, DOTGraphDependencies, DotGraphComponentData> {
+    public validate() {
+        let isValid = false;
+        const dependencies = this.loadDependencies();
+        if (unref(unref(dependencies).dotDescription) !== "")
+            isValid = true;
+        unref(this.storeObject).setProperty({
+            path: `${this.serialisedBaseComponentPath}.isValid`,
+            value: isValid
+        });
+        return isValid;
+    }
+}
+
+```
+
