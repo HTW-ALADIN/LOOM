@@ -1,4 +1,10 @@
 /**
+ * Export Base Component
+ */
+import { BaseComponent } from "./components/BaseComponent/BaseComponent";
+export { BaseComponent };
+
+/**
  * Export all components
  */
 import DOTGraph from "./components/DOTGraph/DOTGraph.vue";
@@ -26,6 +32,21 @@ import type {
   StoreSetterPayload,
   StoreSetterMetaData
 } from "./stores/Store";
+import type {
+  SerialisedContextMenu,
+  SerialisedDependencies,
+  SerialisedMethod,
+  SerialisedMethods,
+  SerializedBaseComponent,
+  ComponentProps,
+  ValidationConfiguration,
+  MethodImplementation,
+  MethodImplementations,
+  ComponentDependencies,
+  ComponentData,
+  BaseComponentType,
+  NestedComponents
+} from "./components/BaseComponent/BaseComponent";
 
 export type {
   DOTGraphProps,
@@ -41,5 +62,18 @@ export type {
   StoreGetter,
   StoreSetter,
   StoreSetterPayload,
-  StoreSetterMetaData
+  StoreSetterMetaData,
+  SerialisedContextMenu,
+  SerialisedDependencies,
+  SerialisedMethod,
+  SerialisedMethods,
+  SerializedBaseComponent,
+  ComponentProps,
+  ValidationConfiguration,
+  MethodImplementation,
+  MethodImplementations,
+  ComponentDependencies,
+  ComponentData,
+  BaseComponentType,
+  NestedComponents
 };

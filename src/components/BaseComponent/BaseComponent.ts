@@ -94,6 +94,24 @@ export type NestedComponents = Record<string, BaseComponent>;
  * The data of a component.
  */
 export type ComponentData = Record<string, any>;
+/**
+ * Supported layout sizes for CARPET.
+ */
+export type LayoutSizes = "phone" | "tablet" | "desktop";
+/**
+ * The layout of a component.
+ */
+export type Layout = Array<{
+  id: number;
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+}>;
+
+export type Layouts = {
+  [layoutSize in LayoutSizes]: Layout;
+};
 
 /**
  * Generic type description with defaults of a serialised base component.
@@ -110,6 +128,10 @@ export interface SerializedBaseComponent<
    * The type of the component.
    */
   type: T;
+  /**
+   * The layouts of the component.
+   */
+  layouts: Layouts;
   /**
    * The name of the component. Will be displayed in the component header in CARPET.
    */
