@@ -33,6 +33,7 @@ export default defineConfig({
           vue: "Vue"
         }
       }
-    }
+    },
+    sourcemap: true
   }
 });

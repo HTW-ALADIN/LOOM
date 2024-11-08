@@ -36,7 +36,7 @@ const renderGraph = (description: string) => {
   graphviz(`#${completeGraphID}`, {
     fit: true,
     zoom: false,
-    useWorker: false
+    useWorker: true
   })
     .transition(() => transitionEffect() as any)
     .renderDot(description);

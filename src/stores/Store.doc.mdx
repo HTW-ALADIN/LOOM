@@ -152,6 +152,7 @@ export interface StoreAPI<State extends StateTree = StateTree> {
     store?: State;
     getProperty: StoreGetter;
     setProperty: StoreSetter;
+    fetchFromAPI: (urlPath: string) => any;
 }
 
 ```
@@ -236,7 +237,8 @@ export const useStore = (store: StateTree): StoreAPI => {
                 else
                     subState = subState[splitPath[depth]];
             }
-        }
+        },
+        fetchFromAPI: (urlPath: string) => { }
     };
 };
 

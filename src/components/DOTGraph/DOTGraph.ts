@@ -14,6 +14,9 @@ import { unref } from "vue";
  * The DOTGraphProps interface is used to define the properties of the DOTGraph component.
  */
 export interface DOTGraphProps extends ComponentProps {
+  /**
+   * The graphID is used to identify the corresponding HTML-element in the respective DOTGraph component.
+   */
   graphID?: string | number;
 }
 
@@ -26,6 +29,9 @@ export type DOTGraphComponentType = "DOTGraph";
  * The DOTGraph-component requires a valid dotDescription to display.
  */
 export interface SerializedDOTGraphDependencies extends SerialisedDependencies {
+  /**
+   * The dotDescription is a JSONPathExpression, that points to the dotDescription of the DOTGraph-component.
+   */
   dotDescription: JSONPathExpression;
 }
 
@@ -33,6 +39,9 @@ export interface SerializedDOTGraphDependencies extends SerialisedDependencies {
  * The DOTGraph-component requires a valid dotDescription to display.
  */
 export interface DOTGraphDependencies extends ComponentDependencies {
+  /**
+   * The dotDescription is a ComputedRef, that points to the dotDescription.
+   */
   dotDescription: ComputedRef<string>;
 }
 
@@ -40,6 +49,9 @@ export interface DOTGraphDependencies extends ComponentDependencies {
  * The DOTGraph-component may hold a static dotDescription in its componentData.
  */
 export interface DotGraphComponentData extends ComponentData {
+  /**
+   * The dotDescription is a string, that holds the Graphviz-DOT description of the graph.
+   */
   dotDescription?: string;
 }
 
@@ -64,6 +76,7 @@ export class DOTGraphComponent extends BaseComponent<
 > {
   /**
    * A DOTGraphComponent is valid, if it has a valid dotDescription.
+   * Correctness of the dotDescription is not checked and is assumed to be set statically in the configuration.
    * @returns
    */
   public validate() {

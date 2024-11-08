@@ -1,0 +1,920 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="src/components/InputField/InputField" />
+
+## InputFieldProps
+`src/components/InputField/InputField`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The InputFieldProps interface is used to define the properties, that are passed from the parent component to the InputField component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface InputFieldProps extends ComponentProps {
+}
+
+```
+
+## InputFieldComponentType
+`src/components/InputField/InputField`
+
+**AST Node Type:** *TypeAliasDeclaration*
+
+#### JSDoc annotations:
+
+The type of the InputField component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export type InputFieldComponentType = "InputField";
+
+```
+
+## SerializedInputFieldDependencies
+`src/components/InputField/InputField`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The InputField-component requires a valid [???] to display.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface SerializedInputFieldDependencies extends SerialisedDependencies {
+    referenceValue?: JSONPathExpression;
+}
+
+```
+
+## InputFieldDependencies
+`src/components/InputField/InputField`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The InputField-component requires a valid dotDescription to display.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface InputFieldDependencies extends ComponentDependencies {
+    referenceValue?: QInputProps["modelValue"];
+}
+
+```
+
+## FieldConfiguration
+`src/components/InputField/InputField`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The FieldConfiguration defines the properties of the InputField component.
+It extends the QInputProps from Quasar.
+
+```bash
+@see https://quasar.dev/vue-components/input#QInput-API
+
+IconList is a list of all available icons in Quasar. The icon style is "material-icons" per default.
+```
+
+#### Code:
+
+```ts
+export interface FieldConfiguration extends Omit<QInputProps, "modelValue" | "inputStyle"> {
+    icon?: IconList;
+    placeholder?: string;
+}
+
+```
+
+## InputFieldComponentData
+`src/components/InputField/InputField`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The InputField-component may hold a static dotDescription in its componentData.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface InputFieldComponentData extends ComponentData {
+    fieldConfiguration: FieldConfiguration;
+    fieldValue: QInputProps["modelValue"];
+}
+
+```
+
+## PathComparisonConfiguration
+`src/components/InputField/InputField`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+Configuration for basic comparison operations with dynamic values from paths.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface PathComparisonConfiguration {
+    path: JSONPathExpression;
+    operator: BasicComparisonOperators;
+}
+
+```
+
+## CompareToValuesFromPathsValidationStrategy
+`src/components/InputField/InputField`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+Validation strategy that compares value from a path to the value of the input field.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface CompareToValuesFromPathsValidationStrategy extends ValidationConfiguration {
+    type: "compareValueFromPath";
+    comparisons: Array<PathComparisonConfiguration>;
+}
+
+```
+
+## StaticComparisonConfiguration
+`src/components/InputField/InputField`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+Configuration for basic comparison operations with static values.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface StaticComparisonConfiguration {
+    value: string | number;
+    operator: BasicComparisonOperators;
+}
+
+```
+
+## CompareToStaticValuesValidationStrategy
+`src/components/InputField/InputField`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+Validation strategy that compares static values to the value of the input field.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface CompareToStaticValuesValidationStrategy extends ValidationConfiguration {
+    type: "compareValueFromStatic";
+    comparisons: Array<StaticComparisonConfiguration>;
+}
+
+```
+
+## MatchAgainstRegExpValidationStrategy
+`src/components/InputField/InputField`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+Validation strategy utilizing regular expressions.
+
+Typescript does not support modeling regular expressions as a type yet, so we use a string here. See e.g. https://github.com/microsoft/TypeScript/issues/6579 .
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface MatchAgainstRegExpValidationStrategy extends ValidationConfiguration {
+    type: "matchAgainstRegExp";
+    regExp: string;
+}
+
+```
+
+## ExternalValidationStrategy
+`src/components/InputField/InputField`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+Validation strategy that uses third-party validators via a http request. Expects a boolean response.
+
+Typescript does not support modeling regular expressions as a type yet, so we use a string here. See e.g. https://github.com/microsoft/TypeScript/issues/6579 .
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface ExternalValidationStrategy extends ValidationConfiguration {
+    type: "externalValidation";
+    url: string;
+}
+
+```
+
+## InputFieldValidationConfigurationMap
+`src/components/InputField/InputField`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+Map of all available validation strategies for the InputField component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+interface InputFieldValidationConfigurationMap {
+    compareValueFromPath: CompareToStaticValuesValidationStrategy;
+    compareValueFromStatic: CompareToValuesFromPathsValidationStrategy;
+    matchAgainstRegExp: MatchAgainstRegExpValidationStrategy;
+    externalValidation: ExternalValidationStrategy;
+}
+
+```
+
+## InputFieldValidationConfiguration
+`src/components/InputField/InputField`
+
+**AST Node Type:** *TypeAliasDeclaration*
+
+#### JSDoc annotations:
+
+Configuration for the different InputField validation strategies.
+As the typescript compiler can't handle "correlated unions", it is recommended to refactor to generics as described here: https://stackoverflow.com/questions/79160004/can-typescript-infer-subtypes-of-parameters-based-on-a-dynamic-variable-accessin
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export type InputFieldValidationConfiguration<K extends keyof InputFieldValidationConfigurationMap> = {
+    [P in K]: {
+        type: P;
+    } & InputFieldValidationConfigurationMap[P];
+}[K];
+
+```
+
+## SerializedInputFieldComponent
+`src/components/InputField/InputField`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The SerializedInputFieldComponent interface is used to define the serialised properties of the InputField component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface SerializedInputFieldComponent extends SerializedBaseComponent<InputFieldComponentType, SerializedInputFieldDependencies, InputFieldComponentData, InputFieldValidationConfiguration<keyof InputFieldValidationConfigurationMap>> {
+}
+
+```
+
+## InputFieldComponent
+`src/components/InputField/InputField`
+
+**AST Node Type:** *ClassDeclaration*
+
+#### JSDoc annotations:
+
+The InputFieldComponent class is a derived taskComponent, that displays a Graph specified in the Graphviz-DOT language.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export class InputFieldComponent extends BaseComponent<SerializedInputFieldComponent, SerializedInputFieldDependencies, InputFieldDependencies, InputFieldComponentData, InputFieldValidationConfiguration<keyof InputFieldValidationConfigurationMap>> {
+    private validationStrategies: {
+        [K in keyof InputFieldValidationConfigurationMap]: (userValue: number | string | undefined | null, functionConfig: InputFieldValidationConfiguration<K>) => void;
+    } = {
+        compareValueFromPath: this.compareToValuesFromPathsValidation.bind(this),
+        compareValueFromStatic: this.compareToStaticValuesValidation.bind(this),
+        matchAgainstRegExp: this.matchAgainstRegExpValidation.bind(this),
+        externalValidation: this.externalValidation.bind(this)
+    };
+    public validate<K extends keyof InputFieldValidationConfigurationMap>(value: number | string | undefined | null) {
+        const validationConfiguration = unref(this.validationConfiguration);
+        const validationType = <K>validationConfiguration.type;
+        const isValid = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
+        unref(this.storeObject).setProperty({
+            path: `${this.serialisedBaseComponentPath}.isValid`,
+            value: isValid
+        });
+    }
+    private compareValues(userValue: any, referenceValue: any, operator: BasicComparisonOperators) {
+        switch (operator) {
+            case "=":
+                return userValue == referenceValue;
+            case "==":
+                return userValue === referenceValue;
+            case "!=":
+                return userValue != referenceValue;
+            case ">":
+                return userValue > referenceValue;
+            case "<":
+                return userValue < referenceValue;
+            case ">=":
+                return userValue >= referenceValue;
+            case "<=":
+                return userValue <= referenceValue;
+        }
+    }
+    private compareToStaticValuesValidation(userValue: number | string | undefined | null, validationConfiguration: CompareToStaticValuesValidationStrategy) {
+        return validationConfiguration.comparisons.every((comparison) => {
+            const { value, operator } = comparison;
+            return this.compareValues(userValue, value, operator);
+        });
+    }
+    private compareToValuesFromPathsValidation(userValue: number | string | undefined | null, validationConfiguration: CompareToValuesFromPathsValidationStrategy) {
+        return validationConfiguration.comparisons.every((comparison) => {
+            const { path, operator } = comparison;
+            const value = unref(this.storeObject).getProperty(path);
+            return this.compareValues(userValue, value, operator);
+        });
+    }
+    private matchAgainstRegExpValidation(userValue: number | string | undefined | null, validationConfiguration: MatchAgainstRegExpValidationStrategy) {
+        const { regExp } = validationConfiguration;
+        if (userValue === undefined)
+            userValue = "";
+        return new RegExp(regExp).test(`${userValue}`);
+    }
+    private externalValidation(userValue: number | string | undefined | null, validationConfiguration: ExternalValidationStrategy) {
+        userValue;
+        return unref(this.storeObject).store?.fetchFromAPI(validationConfiguration.url);
+    }
+}
+
+```
+
+## validate
+`src/components/InputField/InputField`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+A InputFieldComponent is valid, if the value matches the given validation strategy.
+
+```bash
+@param value
+
+@returns
+```
+
+#### Code:
+
+```ts
+export class InputFieldComponent extends BaseComponent<SerializedInputFieldComponent, SerializedInputFieldDependencies, InputFieldDependencies, InputFieldComponentData, InputFieldValidationConfiguration<keyof InputFieldValidationConfigurationMap>> {
+    private validationStrategies: {
+        [K in keyof InputFieldValidationConfigurationMap]: (userValue: number | string | undefined | null, functionConfig: InputFieldValidationConfiguration<K>) => void;
+    } = {
+        compareValueFromPath: this.compareToValuesFromPathsValidation.bind(this),
+        compareValueFromStatic: this.compareToStaticValuesValidation.bind(this),
+        matchAgainstRegExp: this.matchAgainstRegExpValidation.bind(this),
+        externalValidation: this.externalValidation.bind(this)
+    };
+    public validate<K extends keyof InputFieldValidationConfigurationMap>(value: number | string | undefined | null) {
+        const validationConfiguration = unref(this.validationConfiguration);
+        const validationType = <K>validationConfiguration.type;
+        const isValid = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
+        unref(this.storeObject).setProperty({
+            path: `${this.serialisedBaseComponentPath}.isValid`,
+            value: isValid
+        });
+    }
+    private compareValues(userValue: any, referenceValue: any, operator: BasicComparisonOperators) {
+        switch (operator) {
+            case "=":
+                return userValue == referenceValue;
+            case "==":
+                return userValue === referenceValue;
+            case "!=":
+                return userValue != referenceValue;
+            case ">":
+                return userValue > referenceValue;
+            case "<":
+                return userValue < referenceValue;
+            case ">=":
+                return userValue >= referenceValue;
+            case "<=":
+                return userValue <= referenceValue;
+        }
+    }
+    private compareToStaticValuesValidation(userValue: number | string | undefined | null, validationConfiguration: CompareToStaticValuesValidationStrategy) {
+        return validationConfiguration.comparisons.every((comparison) => {
+            const { value, operator } = comparison;
+            return this.compareValues(userValue, value, operator);
+        });
+    }
+    private compareToValuesFromPathsValidation(userValue: number | string | undefined | null, validationConfiguration: CompareToValuesFromPathsValidationStrategy) {
+        return validationConfiguration.comparisons.every((comparison) => {
+            const { path, operator } = comparison;
+            const value = unref(this.storeObject).getProperty(path);
+            return this.compareValues(userValue, value, operator);
+        });
+    }
+    private matchAgainstRegExpValidation(userValue: number | string | undefined | null, validationConfiguration: MatchAgainstRegExpValidationStrategy) {
+        const { regExp } = validationConfiguration;
+        if (userValue === undefined)
+            userValue = "";
+        return new RegExp(regExp).test(`${userValue}`);
+    }
+    private externalValidation(userValue: number | string | undefined | null, validationConfiguration: ExternalValidationStrategy) {
+        userValue;
+        return unref(this.storeObject).store?.fetchFromAPI(validationConfiguration.url);
+    }
+}
+
+```
+
+## compareValues
+`src/components/InputField/InputField`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+Helper function to map serialized operators to actual comparison operations.
+
+```bash
+@param userValue
+
+@param referenceValue
+
+@param operator
+
+@returns
+```
+
+#### Code:
+
+```ts
+export class InputFieldComponent extends BaseComponent<SerializedInputFieldComponent, SerializedInputFieldDependencies, InputFieldDependencies, InputFieldComponentData, InputFieldValidationConfiguration<keyof InputFieldValidationConfigurationMap>> {
+    private validationStrategies: {
+        [K in keyof InputFieldValidationConfigurationMap]: (userValue: number | string | undefined | null, functionConfig: InputFieldValidationConfiguration<K>) => void;
+    } = {
+        compareValueFromPath: this.compareToValuesFromPathsValidation.bind(this),
+        compareValueFromStatic: this.compareToStaticValuesValidation.bind(this),
+        matchAgainstRegExp: this.matchAgainstRegExpValidation.bind(this),
+        externalValidation: this.externalValidation.bind(this)
+    };
+    public validate<K extends keyof InputFieldValidationConfigurationMap>(value: number | string | undefined | null) {
+        const validationConfiguration = unref(this.validationConfiguration);
+        const validationType = <K>validationConfiguration.type;
+        const isValid = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
+        unref(this.storeObject).setProperty({
+            path: `${this.serialisedBaseComponentPath}.isValid`,
+            value: isValid
+        });
+    }
+    private compareValues(userValue: any, referenceValue: any, operator: BasicComparisonOperators) {
+        switch (operator) {
+            case "=":
+                return userValue == referenceValue;
+            case "==":
+                return userValue === referenceValue;
+            case "!=":
+                return userValue != referenceValue;
+            case ">":
+                return userValue > referenceValue;
+            case "<":
+                return userValue < referenceValue;
+            case ">=":
+                return userValue >= referenceValue;
+            case "<=":
+                return userValue <= referenceValue;
+        }
+    }
+    private compareToStaticValuesValidation(userValue: number | string | undefined | null, validationConfiguration: CompareToStaticValuesValidationStrategy) {
+        return validationConfiguration.comparisons.every((comparison) => {
+            const { value, operator } = comparison;
+            return this.compareValues(userValue, value, operator);
+        });
+    }
+    private compareToValuesFromPathsValidation(userValue: number | string | undefined | null, validationConfiguration: CompareToValuesFromPathsValidationStrategy) {
+        return validationConfiguration.comparisons.every((comparison) => {
+            const { path, operator } = comparison;
+            const value = unref(this.storeObject).getProperty(path);
+            return this.compareValues(userValue, value, operator);
+        });
+    }
+    private matchAgainstRegExpValidation(userValue: number | string | undefined | null, validationConfiguration: MatchAgainstRegExpValidationStrategy) {
+        const { regExp } = validationConfiguration;
+        if (userValue === undefined)
+            userValue = "";
+        return new RegExp(regExp).test(`${userValue}`);
+    }
+    private externalValidation(userValue: number | string | undefined | null, validationConfiguration: ExternalValidationStrategy) {
+        userValue;
+        return unref(this.storeObject).store?.fetchFromAPI(validationConfiguration.url);
+    }
+}
+
+```
+
+## compareToStaticValuesValidation
+`src/components/InputField/InputField`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+Validation strategy for comparing a statically defined value to the user input.
+
+```bash
+@param userValue
+
+@returns
+```
+
+#### Code:
+
+```ts
+export class InputFieldComponent extends BaseComponent<SerializedInputFieldComponent, SerializedInputFieldDependencies, InputFieldDependencies, InputFieldComponentData, InputFieldValidationConfiguration<keyof InputFieldValidationConfigurationMap>> {
+    private validationStrategies: {
+        [K in keyof InputFieldValidationConfigurationMap]: (userValue: number | string | undefined | null, functionConfig: InputFieldValidationConfiguration<K>) => void;
+    } = {
+        compareValueFromPath: this.compareToValuesFromPathsValidation.bind(this),
+        compareValueFromStatic: this.compareToStaticValuesValidation.bind(this),
+        matchAgainstRegExp: this.matchAgainstRegExpValidation.bind(this),
+        externalValidation: this.externalValidation.bind(this)
+    };
+    public validate<K extends keyof InputFieldValidationConfigurationMap>(value: number | string | undefined | null) {
+        const validationConfiguration = unref(this.validationConfiguration);
+        const validationType = <K>validationConfiguration.type;
+        const isValid = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
+        unref(this.storeObject).setProperty({
+            path: `${this.serialisedBaseComponentPath}.isValid`,
+            value: isValid
+        });
+    }
+    private compareValues(userValue: any, referenceValue: any, operator: BasicComparisonOperators) {
+        switch (operator) {
+            case "=":
+                return userValue == referenceValue;
+            case "==":
+                return userValue === referenceValue;
+            case "!=":
+                return userValue != referenceValue;
+            case ">":
+                return userValue > referenceValue;
+            case "<":
+                return userValue < referenceValue;
+            case ">=":
+                return userValue >= referenceValue;
+            case "<=":
+                return userValue <= referenceValue;
+        }
+    }
+    private compareToStaticValuesValidation(userValue: number | string | undefined | null, validationConfiguration: CompareToStaticValuesValidationStrategy) {
+        return validationConfiguration.comparisons.every((comparison) => {
+            const { value, operator } = comparison;
+            return this.compareValues(userValue, value, operator);
+        });
+    }
+    private compareToValuesFromPathsValidation(userValue: number | string | undefined | null, validationConfiguration: CompareToValuesFromPathsValidationStrategy) {
+        return validationConfiguration.comparisons.every((comparison) => {
+            const { path, operator } = comparison;
+            const value = unref(this.storeObject).getProperty(path);
+            return this.compareValues(userValue, value, operator);
+        });
+    }
+    private matchAgainstRegExpValidation(userValue: number | string | undefined | null, validationConfiguration: MatchAgainstRegExpValidationStrategy) {
+        const { regExp } = validationConfiguration;
+        if (userValue === undefined)
+            userValue = "";
+        return new RegExp(regExp).test(`${userValue}`);
+    }
+    private externalValidation(userValue: number | string | undefined | null, validationConfiguration: ExternalValidationStrategy) {
+        userValue;
+        return unref(this.storeObject).store?.fetchFromAPI(validationConfiguration.url);
+    }
+}
+
+```
+
+## compareToValuesFromPathsValidation
+`src/components/InputField/InputField`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+Validation strategy for comparing dynamic values from oaths to the user input.
+
+```bash
+@param userValue
+
+@returns
+```
+
+#### Code:
+
+```ts
+export class InputFieldComponent extends BaseComponent<SerializedInputFieldComponent, SerializedInputFieldDependencies, InputFieldDependencies, InputFieldComponentData, InputFieldValidationConfiguration<keyof InputFieldValidationConfigurationMap>> {
+    private validationStrategies: {
+        [K in keyof InputFieldValidationConfigurationMap]: (userValue: number | string | undefined | null, functionConfig: InputFieldValidationConfiguration<K>) => void;
+    } = {
+        compareValueFromPath: this.compareToValuesFromPathsValidation.bind(this),
+        compareValueFromStatic: this.compareToStaticValuesValidation.bind(this),
+        matchAgainstRegExp: this.matchAgainstRegExpValidation.bind(this),
+        externalValidation: this.externalValidation.bind(this)
+    };
+    public validate<K extends keyof InputFieldValidationConfigurationMap>(value: number | string | undefined | null) {
+        const validationConfiguration = unref(this.validationConfiguration);
+        const validationType = <K>validationConfiguration.type;
+        const isValid = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
+        unref(this.storeObject).setProperty({
+            path: `${this.serialisedBaseComponentPath}.isValid`,
+            value: isValid
+        });
+    }
+    private compareValues(userValue: any, referenceValue: any, operator: BasicComparisonOperators) {
+        switch (operator) {
+            case "=":
+                return userValue == referenceValue;
+            case "==":
+                return userValue === referenceValue;
+            case "!=":
+                return userValue != referenceValue;
+            case ">":
+                return userValue > referenceValue;
+            case "<":
+                return userValue < referenceValue;
+            case ">=":
+                return userValue >= referenceValue;
+            case "<=":
+                return userValue <= referenceValue;
+        }
+    }
+    private compareToStaticValuesValidation(userValue: number | string | undefined | null, validationConfiguration: CompareToStaticValuesValidationStrategy) {
+        return validationConfiguration.comparisons.every((comparison) => {
+            const { value, operator } = comparison;
+            return this.compareValues(userValue, value, operator);
+        });
+    }
+    private compareToValuesFromPathsValidation(userValue: number | string | undefined | null, validationConfiguration: CompareToValuesFromPathsValidationStrategy) {
+        return validationConfiguration.comparisons.every((comparison) => {
+            const { path, operator } = comparison;
+            const value = unref(this.storeObject).getProperty(path);
+            return this.compareValues(userValue, value, operator);
+        });
+    }
+    private matchAgainstRegExpValidation(userValue: number | string | undefined | null, validationConfiguration: MatchAgainstRegExpValidationStrategy) {
+        const { regExp } = validationConfiguration;
+        if (userValue === undefined)
+            userValue = "";
+        return new RegExp(regExp).test(`${userValue}`);
+    }
+    private externalValidation(userValue: number | string | undefined | null, validationConfiguration: ExternalValidationStrategy) {
+        userValue;
+        return unref(this.storeObject).store?.fetchFromAPI(validationConfiguration.url);
+    }
+}
+
+```
+
+## matchAgainstRegExpValidation
+`src/components/InputField/InputField`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+Validation strategy utilizing regular expressions.
+
+```bash
+@param userValue
+
+@returns
+```
+
+#### Code:
+
+```ts
+export class InputFieldComponent extends BaseComponent<SerializedInputFieldComponent, SerializedInputFieldDependencies, InputFieldDependencies, InputFieldComponentData, InputFieldValidationConfiguration<keyof InputFieldValidationConfigurationMap>> {
+    private validationStrategies: {
+        [K in keyof InputFieldValidationConfigurationMap]: (userValue: number | string | undefined | null, functionConfig: InputFieldValidationConfiguration<K>) => void;
+    } = {
+        compareValueFromPath: this.compareToValuesFromPathsValidation.bind(this),
+        compareValueFromStatic: this.compareToStaticValuesValidation.bind(this),
+        matchAgainstRegExp: this.matchAgainstRegExpValidation.bind(this),
+        externalValidation: this.externalValidation.bind(this)
+    };
+    public validate<K extends keyof InputFieldValidationConfigurationMap>(value: number | string | undefined | null) {
+        const validationConfiguration = unref(this.validationConfiguration);
+        const validationType = <K>validationConfiguration.type;
+        const isValid = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
+        unref(this.storeObject).setProperty({
+            path: `${this.serialisedBaseComponentPath}.isValid`,
+            value: isValid
+        });
+    }
+    private compareValues(userValue: any, referenceValue: any, operator: BasicComparisonOperators) {
+        switch (operator) {
+            case "=":
+                return userValue == referenceValue;
+            case "==":
+                return userValue === referenceValue;
+            case "!=":
+                return userValue != referenceValue;
+            case ">":
+                return userValue > referenceValue;
+            case "<":
+                return userValue < referenceValue;
+            case ">=":
+                return userValue >= referenceValue;
+            case "<=":
+                return userValue <= referenceValue;
+        }
+    }
+    private compareToStaticValuesValidation(userValue: number | string | undefined | null, validationConfiguration: CompareToStaticValuesValidationStrategy) {
+        return validationConfiguration.comparisons.every((comparison) => {
+            const { value, operator } = comparison;
+            return this.compareValues(userValue, value, operator);
+        });
+    }
+    private compareToValuesFromPathsValidation(userValue: number | string | undefined | null, validationConfiguration: CompareToValuesFromPathsValidationStrategy) {
+        return validationConfiguration.comparisons.every((comparison) => {
+            const { path, operator } = comparison;
+            const value = unref(this.storeObject).getProperty(path);
+            return this.compareValues(userValue, value, operator);
+        });
+    }
+    private matchAgainstRegExpValidation(userValue: number | string | undefined | null, validationConfiguration: MatchAgainstRegExpValidationStrategy) {
+        const { regExp } = validationConfiguration;
+        if (userValue === undefined)
+            userValue = "";
+        return new RegExp(regExp).test(`${userValue}`);
+    }
+    private externalValidation(userValue: number | string | undefined | null, validationConfiguration: ExternalValidationStrategy) {
+        userValue;
+        return unref(this.storeObject).store?.fetchFromAPI(validationConfiguration.url);
+    }
+}
+
+```
+
+## externalValidation
+`src/components/InputField/InputField`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+Validation strategy for using third-party validators via a http request. Expects a boolean response.
+
+```bash
+@param userValue
+
+@returns
+```
+
+#### Code:
+
+```ts
+export class InputFieldComponent extends BaseComponent<SerializedInputFieldComponent, SerializedInputFieldDependencies, InputFieldDependencies, InputFieldComponentData, InputFieldValidationConfiguration<keyof InputFieldValidationConfigurationMap>> {
+    private validationStrategies: {
+        [K in keyof InputFieldValidationConfigurationMap]: (userValue: number | string | undefined | null, functionConfig: InputFieldValidationConfiguration<K>) => void;
+    } = {
+        compareValueFromPath: this.compareToValuesFromPathsValidation.bind(this),
+        compareValueFromStatic: this.compareToStaticValuesValidation.bind(this),
+        matchAgainstRegExp: this.matchAgainstRegExpValidation.bind(this),
+        externalValidation: this.externalValidation.bind(this)
+    };
+    public validate<K extends keyof InputFieldValidationConfigurationMap>(value: number | string | undefined | null) {
+        const validationConfiguration = unref(this.validationConfiguration);
+        const validationType = <K>validationConfiguration.type;
+        const isValid = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
+        unref(this.storeObject).setProperty({
+            path: `${this.serialisedBaseComponentPath}.isValid`,
+            value: isValid
+        });
+    }
+    private compareValues(userValue: any, referenceValue: any, operator: BasicComparisonOperators) {
+        switch (operator) {
+            case "=":
+                return userValue == referenceValue;
+            case "==":
+                return userValue === referenceValue;
+            case "!=":
+                return userValue != referenceValue;
+            case ">":
+                return userValue > referenceValue;
+            case "<":
+                return userValue < referenceValue;
+            case ">=":
+                return userValue >= referenceValue;
+            case "<=":
+                return userValue <= referenceValue;
+        }
+    }
+    private compareToStaticValuesValidation(userValue: number | string | undefined | null, validationConfiguration: CompareToStaticValuesValidationStrategy) {
+        return validationConfiguration.comparisons.every((comparison) => {
+            const { value, operator } = comparison;
+            return this.compareValues(userValue, value, operator);
+        });
+    }
+    private compareToValuesFromPathsValidation(userValue: number | string | undefined | null, validationConfiguration: CompareToValuesFromPathsValidationStrategy) {
+        return validationConfiguration.comparisons.every((comparison) => {
+            const { path, operator } = comparison;
+            const value = unref(this.storeObject).getProperty(path);
+            return this.compareValues(userValue, value, operator);
+        });
+    }
+    private matchAgainstRegExpValidation(userValue: number | string | undefined | null, validationConfiguration: MatchAgainstRegExpValidationStrategy) {
+        const { regExp } = validationConfiguration;
+        if (userValue === undefined)
+            userValue = "";
+        return new RegExp(regExp).test(`${userValue}`);
+    }
+    private externalValidation(userValue: number | string | undefined | null, validationConfiguration: ExternalValidationStrategy) {
+        userValue;
+        return unref(this.storeObject).store?.fetchFromAPI(validationConfiguration.url);
+    }
+}
+
+```
+

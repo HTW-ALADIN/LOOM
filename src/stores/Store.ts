@@ -59,9 +59,24 @@ export interface StoreSetter {
  * The StoreAPI interface provides the set of methods, with which the components can interact with the store.
  */
 export interface StoreAPI<State extends StateTree = StateTree> {
+  /**
+   * The store object.
+   */
   store?: State;
+  /**
+   * The getProperty function is used to get a value from the store.
+   */
   getProperty: StoreGetter;
+  /**
+   * The setProperty function is used to mutate (and track changes of) a value in the store.
+   */
   setProperty: StoreSetter;
+  /**
+   * Method for fetching data from the API of the host.
+   * @param urlPath Partial URL path
+   * @returns any
+   */
+  fetchFromAPI: (urlPath: string) => any;
 }
 
 /**
@@ -124,6 +139,10 @@ export const useStore = (store: StateTree): StoreAPI => {
           }
         } else subState = subState[splitPath[depth]];
       }
-    }
+    },
+    /**
+     * Mock method for fetching data from the API of the host.
+     */
+    fetchFromAPI: (urlPath: string) => {}
   };
 };

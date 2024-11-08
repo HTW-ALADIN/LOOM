@@ -5,75 +5,23 @@ import { BaseComponent } from "./components/BaseComponent/BaseComponent";
 export { BaseComponent };
 
 /**
- * Export all components
+ * Export all Vue-components
  */
 import DOTGraph from "./components/DOTGraph/DOTGraph.vue";
+import InputField from "./components/InputField/InputField.vue";
 
-export { DOTGraph };
+export const CARPETComponents = { DOTGraph, InputField };
+
+import type { SerializedDOTGraphComponent } from "./components/DOTGraph/DOTGraph";
+import type { SerializedInputFieldComponent } from "./components/InputField/InputField";
+export type SerializedCARPETComponents =
+  | SerializedDOTGraphComponent
+  | SerializedInputFieldComponent;
 
 /**
  * Export all types
  */
-import type {
-  DOTGraphProps,
-  DOTGraphComponent,
-  DOTGraphDependencies,
-  DOTGraphComponentType,
-  DotGraphComponentData,
-  SerializedDOTGraphComponent,
-  SerializedDOTGraphDependencies
-} from "./components/DOTGraph/DOTGraph";
-import type {
-  JSONPathSubExpression,
-  JSONPathExpression,
-  StoreAPI,
-  StoreGetter,
-  StoreSetter,
-  StoreSetterPayload,
-  StoreSetterMetaData
-} from "./stores/Store";
-import type {
-  SerialisedContextMenu,
-  SerialisedDependencies,
-  SerialisedMethod,
-  SerialisedMethods,
-  SerializedBaseComponent,
-  ComponentProps,
-  ValidationConfiguration,
-  MethodImplementation,
-  MethodImplementations,
-  ComponentDependencies,
-  ComponentData,
-  BaseComponentType,
-  NestedComponents
-} from "./components/BaseComponent/BaseComponent";
-
-export type {
-  DOTGraphProps,
-  DOTGraphComponent,
-  DOTGraphDependencies,
-  DOTGraphComponentType,
-  DotGraphComponentData,
-  SerializedDOTGraphComponent,
-  SerializedDOTGraphDependencies,
-  JSONPathSubExpression,
-  JSONPathExpression,
-  StoreAPI,
-  StoreGetter,
-  StoreSetter,
-  StoreSetterPayload,
-  StoreSetterMetaData,
-  SerialisedContextMenu,
-  SerialisedDependencies,
-  SerialisedMethod,
-  SerialisedMethods,
-  SerializedBaseComponent,
-  ComponentProps,
-  ValidationConfiguration,
-  MethodImplementation,
-  MethodImplementations,
-  ComponentDependencies,
-  ComponentData,
-  BaseComponentType,
-  NestedComponents
-};
+export * from "./components/DOTGraph/DOTGraph";
+export * from "./stores/Store";
+export * from "./components/BaseComponent/BaseComponent";
+export * from "./components/InputField/InputField";

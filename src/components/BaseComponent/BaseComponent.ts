@@ -37,6 +37,9 @@ export interface MethodImplementations {
 export interface ComponentProps {
   /**
    * The ID of the component.
+   *
+   * @minimumn 0
+   * @TJS-type integer
    */
   componentID: number;
   /**
@@ -74,14 +77,13 @@ export type SerialisedContextMenu = {
 /**
  * The configuration of the validation of a component.
  */
-//TODO: Implement validation configuration (mostly governed by Matrix component, as it is most complex as of now)
 export type ValidationConfiguration = {};
 
 /**
  * Serialised dependencies of a component.
  */
 // Since interface Index Signatures can not be optional, the following Typedefinitions have to be types of Record<S, T> https://github.com/microsoft/TypeScript/issues/46969
-export type SerialisedDependencies = Record<string, JSONPathExpression>;
+export type SerialisedDependencies = Record<string, JSONPathExpression | undefined>;
 /**
  * The dependencies of a component.
  */
@@ -102,6 +104,7 @@ export interface SerializedBaseComponent<
   T extends BaseComponentType = BaseComponentType,
   D extends SerialisedDependencies = SerialisedDependencies,
   C extends ComponentData = ComponentData,
+  V extends ValidationConfiguration = ValidationConfiguration,
   SM extends SerialisedMethods = SerialisedMethods,
   SC extends SerialisedContextMenu = SerialisedContextMenu,
   NC extends NestedComponents = NestedComponents
@@ -131,6 +134,10 @@ export interface SerializedBaseComponent<
    */
   component: C;
   /**
+   * The validation configuration of the component.
+   */
+  validationConfiguration: V;
+  /**
    * The methods of the component.
    */
   methods?: SM;
@@ -154,12 +161,14 @@ export abstract class BaseComponent<
   SD extends SerialisedDependencies = SerialisedDependencies,
   D extends ComponentDependencies = ComponentDependencies,
   CD extends ComponentData = ComponentData,
+  V extends ValidationConfiguration = ValidationConfiguration,
   SM extends SerialisedMethods = SerialisedMethods,
   M extends MethodImplementations = MethodImplementations,
   NC extends NestedComponents = NestedComponents
 > {
   protected serializedBaseComponent: ComputedRef<C>;
   protected dependencies: ComputedRef<D>;
+  protected validationConfiguration: ComputedRef<V>;
 
   constructor(
     /**
@@ -177,6 +186,13 @@ export abstract class BaseComponent<
     );
 
     this.dependencies = this.loadDependencies();
+    this.validationConfiguration = this.loadValidationConfiguration();
+  }
+
+  private loadValidationConfiguration() {
+    return <ComputedRef<V>>computed(() => {
+      return unref(this.serializedBaseComponent).validationConfiguration;
+    });
   }
 
   /**
@@ -201,7 +217,9 @@ export abstract class BaseComponent<
 
       const dependencyPaths = this.getDependencyPaths();
       for (const [dependencyName, dependencyPath] of Object.entries(unref(dependencyPaths))) {
-        const dependencyValue = unref(this.storeObject).getProperty(dependencyPath);
+        const dependencyValue = unref(this.storeObject).getProperty(
+          dependencyPath as JSONPathExpression
+        );
         dependencies[dependencyName] = dependencyValue;
       }
       return dependencies;
@@ -250,6 +268,13 @@ export abstract class BaseComponent<
   }
 
   /**
+   * Getter function to get the component path
+   */
+  public getComponentPath() {
+    return this.serialisedBaseComponentPath;
+  }
+
+  /**
    * Getter function to get the nested component paths
    * @returns ComputedRef<{ [nestedComponentName in KeyOfType<NC>]: JSONPathExpression }>
    */
@@ -267,8 +292,10 @@ export abstract class BaseComponent<
 
   /**
    * Validation function to validate the component.
+   * The function must set the isValid property of the component by assessing the structural validity of the component. (Type assertion)
+   * The function must set the isCorrect property of the component by assessing the correctness of the component. (Value assertion)
    */
-  protected abstract validate(): void;
+  protected abstract validate(value: any): void;
 
   /**
    * Helper function to get a computed property from the store.
