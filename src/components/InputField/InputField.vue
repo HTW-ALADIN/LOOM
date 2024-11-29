@@ -53,6 +53,7 @@ const onUserInput = (newValue: string | number | null) => {
     path: `${component.getComponentPath()}.component.fieldValue`,
     value: newValue
   });
+  component.validate(<string | number | undefined | null>value.value);
 };
 </script>
 

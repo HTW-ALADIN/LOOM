@@ -55,6 +55,13 @@ export interface ComponentProps {
    */
   style?: StyleValue;
 }
+
+/**
+ * Eventual emitted events of a component. Parent components can listen to these events.
+ * Especially useful when nesting components.
+ */
+export type ComponentEmits = Record<string, any[]>;
+
 /**
  * The type of a component.
  */
@@ -88,14 +95,32 @@ export type SerialisedDependencies = Record<string, JSONPathExpression | undefin
  * The dependencies of a component.
  */
 export type ComponentDependencies = Record<string, any>;
+
 /**
- * Possible nested components of a component.
+ * If a component provides a custom inner component layout, this type is to be used to configure the layout.
+ * The layout is required to be built with CSS Grid.
  */
-export type NestedComponents = Record<string, BaseComponent>;
+// TODO: This type is not yet used in the codebase. It is a placeholder for future development. E.g. for FermentALADIN.
+export type CustomInnerComponentLayout = {};
+
+/**
+ * Possible nested components of a component. The components can be nested arbitrarily
+ */
+export interface NestedComponents {
+  [nestedComponentGroupNameOrnestedComponentName: string]:
+    | SerializedBaseComponent
+    | NestedComponents;
+}
+
 /**
  * The data of a component.
  */
-export type ComponentData = Record<string, any>;
+export type ComponentData = {
+  /**
+   * Some components may offer a customizable inner component layout. The layout is required to be built with CSS Grid.
+   */
+  innerComponentLayout?: CustomInnerComponentLayout;
+};
 
 /**
  * Generic type description with defaults of a serialised base component.
@@ -261,10 +286,10 @@ export abstract class BaseComponent<
 
   /**
    * Getter function to get the nested components
-   * @returns ComputedRef<NC>
+   * @returns NC
    */
   public getNestedComponents() {
-    return unref(this.serializedBaseComponent).nestedComponents;
+    return <NC>unref(this.serializedBaseComponent).nestedComponents;
   }
 
   /**
@@ -272,22 +297,6 @@ export abstract class BaseComponent<
    */
   public getComponentPath() {
     return this.serialisedBaseComponentPath;
-  }
-
-  /**
-   * Getter function to get the nested component paths
-   * @returns ComputedRef<{ [nestedComponentName in KeyOfType<NC>]: JSONPathExpression }>
-   */
-  public getNestedComponentPaths() {
-    const nestedComponents = this.getNestedComponents();
-    const nestedComponentsPaths = <
-      { [nestedComponentName in KeyOfType<NC>]: JSONPathExpression }
-    >{};
-    for (const nestedComponentName in nestedComponents) {
-      nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
-        `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
-    }
-    return nestedComponentsPaths;
   }
 
   /**
@@ -324,7 +333,7 @@ export abstract class BaseComponent<
 }
 
 // see typescript issue https://github.com/microsoft/TypeScript/issues/23724
-type KeyTypes<T> = {
+export type KeyTypes<T> = {
   [K in keyof T]-?: K extends string
     ? string
     : K extends number
@@ -333,7 +342,7 @@ type KeyTypes<T> = {
         ? symbol
         : never;
 }[keyof T];
-type KeyOfType<T, KeyType extends string | number | symbol = KeyTypes<T>> = Extract<
+export type KeyOfType<T, KeyType extends string | number | symbol = KeyTypes<T>> = Extract<
   keyof T,
   KeyType
 >;

@@ -1,0 +1,233 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="src/components/GenericButton/GenericButton" />
+
+## ButtonProps
+`src/components/GenericButton/GenericButton`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The ButtonProps interface is used to define the properties of the Button component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface ButtonProps extends ComponentProps {
+    isValid: boolean;
+}
+
+```
+
+## ButtonEmits
+`src/components/GenericButton/GenericButton`
+
+**AST Node Type:** *TypeAliasDeclaration*
+
+#### JSDoc annotations:
+
+The Button component emitts an event on click.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export type ButtonEmits = {
+    buttonClick: [
+    ];
+};
+
+```
+
+## ButtonComponentType
+`src/components/GenericButton/GenericButton`
+
+**AST Node Type:** *TypeAliasDeclaration*
+
+#### JSDoc annotations:
+
+The type of the Button component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export type ButtonComponentType = "GenericButton";
+
+```
+
+## SerializedButtonDependencies
+`src/components/GenericButton/GenericButton`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The Button-component has no dependencies.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface SerializedButtonDependencies extends SerialisedDependencies {
+}
+
+```
+
+## ButtonDependencies
+`src/components/GenericButton/GenericButton`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The Button-component has no dependencies
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface ButtonDependencies extends ComponentDependencies {
+}
+
+```
+
+## ButtonConfiguration
+`src/components/GenericButton/GenericButton`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The ButtonConfiguration defines the look and behavior of the button.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface ButtonConfiguration {
+    icon?: IconList;
+    dimensions?: {
+        width: number;
+        height: number;
+    };
+    disableOnInvalid?: boolean;
+}
+
+```
+
+## ButtonComponentData
+`src/components/GenericButton/GenericButton`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The Button-component has to display a label. It may display a progress bar or a loading spinner.
+It can be disabled on invalid input.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface ButtonComponentData extends ComponentData {
+    buttonConfiguration: ButtonConfiguration;
+    label: string;
+    loadingState: boolean | undefined;
+    progressPercentage?: number | undefined | null;
+}
+
+```
+
+## SerializedButtonComponent
+`src/components/GenericButton/GenericButton`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+The SerializedButtonComponent interface is used to define the serialised properties of the Button component.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface SerializedButtonComponent extends SerializedBaseComponent<ButtonComponentType, SerializedButtonDependencies, ButtonComponentData> {
+}
+
+```
+
+## ButtonComponent
+`src/components/GenericButton/GenericButton`
+
+**AST Node Type:** *ClassDeclaration*
+
+#### JSDoc annotations:
+
+The ButtonComponent class is a derived taskComponent, that displays a Graph specified in the Graphviz-DOT language.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export class ButtonComponent extends BaseComponent<SerializedButtonComponent, SerializedButtonDependencies, ButtonDependencies, ButtonComponentData> {
+    public validate(isValid: boolean) {
+        return isValid;
+    }
+}
+
+```
+
+## validate
+`src/components/GenericButton/GenericButton`
+
+**AST Node Type:** *MethodDeclaration*
+
+#### JSDoc annotations:
+
+A ButtonComponent is valid, if the parent element has decided it is valid.
+
+```bash
+@returns
+```
+
+#### Code:
+
+```ts
+export class ButtonComponent extends BaseComponent<SerializedButtonComponent, SerializedButtonDependencies, ButtonDependencies, ButtonComponentData> {
+    public validate(isValid: boolean) {
+        return isValid;
+    }
+}
+
+```
+

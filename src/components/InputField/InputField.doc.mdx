@@ -377,10 +377,14 @@ export class InputFieldComponent extends BaseComponent<SerializedInputFieldCompo
     public validate<K extends keyof InputFieldValidationConfigurationMap>(value: number | string | undefined | null) {
         const validationConfiguration = unref(this.validationConfiguration);
         const validationType = <K>validationConfiguration.type;
-        const isValid = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
+        const isCorrect = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
         unref(this.storeObject).setProperty({
             path: `${this.serialisedBaseComponentPath}.isValid`,
-            value: isValid
+            value: value ? true : false
+        });
+        unref(this.storeObject).setProperty({
+            path: `${this.serialisedBaseComponentPath}.isCorrect`,
+            value: isCorrect
         });
     }
     private compareValues(userValue: any, referenceValue: any, operator: BasicComparisonOperators) {
@@ -435,7 +439,8 @@ export class InputFieldComponent extends BaseComponent<SerializedInputFieldCompo
 
 #### JSDoc annotations:
 
-A InputFieldComponent is valid, if the value matches the given validation strategy.
+A InputFieldComponent is valid, if the value matches the expected type or is not empty.
+A InputFieldComponent is correct, if the value matches the given validation strategy.
 
 ```bash
 @param value
@@ -458,10 +463,14 @@ export class InputFieldComponent extends BaseComponent<SerializedInputFieldCompo
     public validate<K extends keyof InputFieldValidationConfigurationMap>(value: number | string | undefined | null) {
         const validationConfiguration = unref(this.validationConfiguration);
         const validationType = <K>validationConfiguration.type;
-        const isValid = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
+        const isCorrect = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
         unref(this.storeObject).setProperty({
             path: `${this.serialisedBaseComponentPath}.isValid`,
-            value: isValid
+            value: value ? true : false
+        });
+        unref(this.storeObject).setProperty({
+            path: `${this.serialisedBaseComponentPath}.isCorrect`,
+            value: isCorrect
         });
     }
     private compareValues(userValue: any, referenceValue: any, operator: BasicComparisonOperators) {
@@ -543,10 +552,14 @@ export class InputFieldComponent extends BaseComponent<SerializedInputFieldCompo
     public validate<K extends keyof InputFieldValidationConfigurationMap>(value: number | string | undefined | null) {
         const validationConfiguration = unref(this.validationConfiguration);
         const validationType = <K>validationConfiguration.type;
-        const isValid = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
+        const isCorrect = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
         unref(this.storeObject).setProperty({
             path: `${this.serialisedBaseComponentPath}.isValid`,
-            value: isValid
+            value: value ? true : false
+        });
+        unref(this.storeObject).setProperty({
+            path: `${this.serialisedBaseComponentPath}.isCorrect`,
+            value: isCorrect
         });
     }
     private compareValues(userValue: any, referenceValue: any, operator: BasicComparisonOperators) {
@@ -624,10 +637,14 @@ export class InputFieldComponent extends BaseComponent<SerializedInputFieldCompo
     public validate<K extends keyof InputFieldValidationConfigurationMap>(value: number | string | undefined | null) {
         const validationConfiguration = unref(this.validationConfiguration);
         const validationType = <K>validationConfiguration.type;
-        const isValid = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
+        const isCorrect = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
         unref(this.storeObject).setProperty({
             path: `${this.serialisedBaseComponentPath}.isValid`,
-            value: isValid
+            value: value ? true : false
+        });
+        unref(this.storeObject).setProperty({
+            path: `${this.serialisedBaseComponentPath}.isCorrect`,
+            value: isCorrect
         });
     }
     private compareValues(userValue: any, referenceValue: any, operator: BasicComparisonOperators) {
@@ -705,10 +722,14 @@ export class InputFieldComponent extends BaseComponent<SerializedInputFieldCompo
     public validate<K extends keyof InputFieldValidationConfigurationMap>(value: number | string | undefined | null) {
         const validationConfiguration = unref(this.validationConfiguration);
         const validationType = <K>validationConfiguration.type;
-        const isValid = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
+        const isCorrect = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
         unref(this.storeObject).setProperty({
             path: `${this.serialisedBaseComponentPath}.isValid`,
-            value: isValid
+            value: value ? true : false
+        });
+        unref(this.storeObject).setProperty({
+            path: `${this.serialisedBaseComponentPath}.isCorrect`,
+            value: isCorrect
         });
     }
     private compareValues(userValue: any, referenceValue: any, operator: BasicComparisonOperators) {
@@ -786,10 +807,14 @@ export class InputFieldComponent extends BaseComponent<SerializedInputFieldCompo
     public validate<K extends keyof InputFieldValidationConfigurationMap>(value: number | string | undefined | null) {
         const validationConfiguration = unref(this.validationConfiguration);
         const validationType = <K>validationConfiguration.type;
-        const isValid = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
+        const isCorrect = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
         unref(this.storeObject).setProperty({
             path: `${this.serialisedBaseComponentPath}.isValid`,
-            value: isValid
+            value: value ? true : false
+        });
+        unref(this.storeObject).setProperty({
+            path: `${this.serialisedBaseComponentPath}.isCorrect`,
+            value: isCorrect
         });
     }
     private compareValues(userValue: any, referenceValue: any, operator: BasicComparisonOperators) {
@@ -867,10 +892,14 @@ export class InputFieldComponent extends BaseComponent<SerializedInputFieldCompo
     public validate<K extends keyof InputFieldValidationConfigurationMap>(value: number | string | undefined | null) {
         const validationConfiguration = unref(this.validationConfiguration);
         const validationType = <K>validationConfiguration.type;
-        const isValid = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
+        const isCorrect = this.validationStrategies[validationType](value, <InputFieldValidationConfiguration<K>>validationConfiguration);
         unref(this.storeObject).setProperty({
             path: `${this.serialisedBaseComponentPath}.isValid`,
-            value: isValid
+            value: value ? true : false
+        });
+        unref(this.storeObject).setProperty({
+            path: `${this.serialisedBaseComponentPath}.isCorrect`,
+            value: isCorrect
         });
     }
     private compareValues(userValue: any, referenceValue: any, operator: BasicComparisonOperators) {

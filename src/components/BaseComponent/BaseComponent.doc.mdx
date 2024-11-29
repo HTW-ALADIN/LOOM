@@ -115,6 +115,27 @@ export interface ComponentProps {
 
 ```
 
+## ComponentEmits
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *TypeAliasDeclaration*
+
+#### JSDoc annotations:
+
+Eventual emitted events of a component. Parent components can listen to these events.
+Especially useful when nesting components.
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export type ComponentEmits = Record<string, any[]>;
+
+```
+
 ## BaseComponentType
 `src/components/BaseComponent/BaseComponent`
 
@@ -218,14 +239,15 @@ export type ComponentDependencies = Record<string, any>;
 
 ```
 
-## NestedComponents
+## CustomInnerComponentLayout
 `src/components/BaseComponent/BaseComponent`
 
 **AST Node Type:** *TypeAliasDeclaration*
 
 #### JSDoc annotations:
 
-Possible nested components of a component.
+If a component provides a custom inner component layout, this type is to be used to configure the layout.
+The layout is required to be built with CSS Grid.
 
 ```bash
 
@@ -234,7 +256,29 @@ Possible nested components of a component.
 #### Code:
 
 ```ts
-export type NestedComponents = Record<string, BaseComponent>;
+export type CustomInnerComponentLayout = {};
+
+```
+
+## NestedComponents
+`src/components/BaseComponent/BaseComponent`
+
+**AST Node Type:** *InterfaceDeclaration*
+
+#### JSDoc annotations:
+
+Possible nested components of a component. The components can be nested arbitrarily
+
+```bash
+
+```
+
+#### Code:
+
+```ts
+export interface NestedComponents {
+    [nestedComponentGroupNameOrnestedComponentName: string]: SerializedBaseComponent | NestedComponents;
+}
 
 ```
 
@@ -254,7 +298,9 @@ The data of a component.
 #### Code:
 
 ```ts
-export type ComponentData = Record<string, any>;
+export type ComponentData = {
+    innerComponentLayout?: CustomInnerComponentLayout;
+};
 
 ```
 
@@ -353,21 +399,10 @@ export abstract class BaseComponent<C extends SerializedBaseComponent = Serializ
         return this.dependencies;
     }
     public getNestedComponents() {
-        return unref(this.serializedBaseComponent).nestedComponents;
+        return <NC>unref(this.serializedBaseComponent).nestedComponents;
     }
     public getComponentPath() {
         return this.serialisedBaseComponentPath;
-    }
-    public getNestedComponentPaths() {
-        const nestedComponents = this.getNestedComponents();
-        const nestedComponentsPaths = <{
-            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
-        }>{};
-        for (const nestedComponentName in nestedComponents) {
-            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
-                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
-        }
-        return nestedComponentsPaths;
     }
     protected abstract validate(value: any): void;
     public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
@@ -450,21 +485,10 @@ export abstract class BaseComponent<C extends SerializedBaseComponent = Serializ
         return this.dependencies;
     }
     public getNestedComponents() {
-        return unref(this.serializedBaseComponent).nestedComponents;
+        return <NC>unref(this.serializedBaseComponent).nestedComponents;
     }
     public getComponentPath() {
         return this.serialisedBaseComponentPath;
-    }
-    public getNestedComponentPaths() {
-        const nestedComponents = this.getNestedComponents();
-        const nestedComponentsPaths = <{
-            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
-        }>{};
-        for (const nestedComponentName in nestedComponents) {
-            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
-                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
-        }
-        return nestedComponentsPaths;
     }
     protected abstract validate(value: any): void;
     public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
@@ -545,21 +569,10 @@ export abstract class BaseComponent<C extends SerializedBaseComponent = Serializ
         return this.dependencies;
     }
     public getNestedComponents() {
-        return unref(this.serializedBaseComponent).nestedComponents;
+        return <NC>unref(this.serializedBaseComponent).nestedComponents;
     }
     public getComponentPath() {
         return this.serialisedBaseComponentPath;
-    }
-    public getNestedComponentPaths() {
-        const nestedComponents = this.getNestedComponents();
-        const nestedComponentsPaths = <{
-            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
-        }>{};
-        for (const nestedComponentName in nestedComponents) {
-            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
-                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
-        }
-        return nestedComponentsPaths;
     }
     protected abstract validate(value: any): void;
     public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
@@ -640,21 +653,10 @@ export abstract class BaseComponent<C extends SerializedBaseComponent = Serializ
         return this.dependencies;
     }
     public getNestedComponents() {
-        return unref(this.serializedBaseComponent).nestedComponents;
+        return <NC>unref(this.serializedBaseComponent).nestedComponents;
     }
     public getComponentPath() {
         return this.serialisedBaseComponentPath;
-    }
-    public getNestedComponentPaths() {
-        const nestedComponents = this.getNestedComponents();
-        const nestedComponentsPaths = <{
-            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
-        }>{};
-        for (const nestedComponentName in nestedComponents) {
-            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
-                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
-        }
-        return nestedComponentsPaths;
     }
     protected abstract validate(value: any): void;
     public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
@@ -735,21 +737,10 @@ export abstract class BaseComponent<C extends SerializedBaseComponent = Serializ
         return this.dependencies;
     }
     public getNestedComponents() {
-        return unref(this.serializedBaseComponent).nestedComponents;
+        return <NC>unref(this.serializedBaseComponent).nestedComponents;
     }
     public getComponentPath() {
         return this.serialisedBaseComponentPath;
-    }
-    public getNestedComponentPaths() {
-        const nestedComponents = this.getNestedComponents();
-        const nestedComponentsPaths = <{
-            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
-        }>{};
-        for (const nestedComponentName in nestedComponents) {
-            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
-                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
-        }
-        return nestedComponentsPaths;
     }
     protected abstract validate(value: any): void;
     public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
@@ -830,21 +821,10 @@ export abstract class BaseComponent<C extends SerializedBaseComponent = Serializ
         return this.dependencies;
     }
     public getNestedComponents() {
-        return unref(this.serializedBaseComponent).nestedComponents;
+        return <NC>unref(this.serializedBaseComponent).nestedComponents;
     }
     public getComponentPath() {
         return this.serialisedBaseComponentPath;
-    }
-    public getNestedComponentPaths() {
-        const nestedComponents = this.getNestedComponents();
-        const nestedComponentsPaths = <{
-            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
-        }>{};
-        for (const nestedComponentName in nestedComponents) {
-            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
-                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
-        }
-        return nestedComponentsPaths;
     }
     protected abstract validate(value: any): void;
     public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
@@ -925,21 +905,10 @@ export abstract class BaseComponent<C extends SerializedBaseComponent = Serializ
         return this.dependencies;
     }
     public getNestedComponents() {
-        return unref(this.serializedBaseComponent).nestedComponents;
+        return <NC>unref(this.serializedBaseComponent).nestedComponents;
     }
     public getComponentPath() {
         return this.serialisedBaseComponentPath;
-    }
-    public getNestedComponentPaths() {
-        const nestedComponents = this.getNestedComponents();
-        const nestedComponentsPaths = <{
-            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
-        }>{};
-        for (const nestedComponentName in nestedComponents) {
-            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
-                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
-        }
-        return nestedComponentsPaths;
     }
     protected abstract validate(value: any): void;
     public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
@@ -966,7 +935,7 @@ export abstract class BaseComponent<C extends SerializedBaseComponent = Serializ
 Getter function to get the nested components
 
 ```bash
-@returns ComputedRef<NC>
+@returns NC
 ```
 
 #### Code:
@@ -1020,21 +989,10 @@ export abstract class BaseComponent<C extends SerializedBaseComponent = Serializ
         return this.dependencies;
     }
     public getNestedComponents() {
-        return unref(this.serializedBaseComponent).nestedComponents;
+        return <NC>unref(this.serializedBaseComponent).nestedComponents;
     }
     public getComponentPath() {
         return this.serialisedBaseComponentPath;
-    }
-    public getNestedComponentPaths() {
-        const nestedComponents = this.getNestedComponents();
-        const nestedComponentsPaths = <{
-            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
-        }>{};
-        for (const nestedComponentName in nestedComponents) {
-            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
-                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
-        }
-        return nestedComponentsPaths;
     }
     protected abstract validate(value: any): void;
     public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
@@ -1115,116 +1073,10 @@ export abstract class BaseComponent<C extends SerializedBaseComponent = Serializ
         return this.dependencies;
     }
     public getNestedComponents() {
-        return unref(this.serializedBaseComponent).nestedComponents;
+        return <NC>unref(this.serializedBaseComponent).nestedComponents;
     }
     public getComponentPath() {
         return this.serialisedBaseComponentPath;
-    }
-    public getNestedComponentPaths() {
-        const nestedComponents = this.getNestedComponents();
-        const nestedComponentsPaths = <{
-            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
-        }>{};
-        for (const nestedComponentName in nestedComponents) {
-            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
-                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
-        }
-        return nestedComponentsPaths;
-    }
-    protected abstract validate(value: any): void;
-    public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
-        return computed<T>(() => unref(this.storeObject).getProperty(taskGraphPath));
-    };
-    public getSelectedMethods = (methodImplementations: M): M => {
-        const methods = <SM>unref(this.serializedBaseComponent).methods;
-        return Object.entries(methods).reduce((selectedMethods, [methodName, methodDefinition]) => {
-            const { description } = methodDefinition;
-            return { ...selectedMethods, [description]: methodImplementations[methodName] };
-        }, <M>{});
-    };
-}
-
-```
-
-## getNestedComponentPaths
-`src/components/BaseComponent/BaseComponent`
-
-**AST Node Type:** *MethodDeclaration*
-
-#### JSDoc annotations:
-
-Getter function to get the nested component paths
-
-```bash
-@returns ComputedRef<{ [nestedComponentName in KeyOfType<NC>]: JSONPathExpression }>
-```
-
-#### Code:
-
-```ts
-export abstract class BaseComponent<C extends SerializedBaseComponent = SerializedBaseComponent, SD extends SerialisedDependencies = SerialisedDependencies, D extends ComponentDependencies = ComponentDependencies, CD extends ComponentData = ComponentData, V extends ValidationConfiguration = ValidationConfiguration, SM extends SerialisedMethods = SerialisedMethods, M extends MethodImplementations = MethodImplementations, NC extends NestedComponents = NestedComponents> {
-    protected serializedBaseComponent: ComputedRef<C>;
-    protected dependencies: ComputedRef<D>;
-    protected validationConfiguration: ComputedRef<V>;
-    constructor(protected storeObject: Ref<StoreAPI>, protected componentID: number, protected serialisedBaseComponentPath: JSONPathExpression) {
-        this.serializedBaseComponent = this.getComputedTaskGraphProperty<C>(serialisedBaseComponentPath);
-        this.dependencies = this.loadDependencies();
-        this.validationConfiguration = this.loadValidationConfiguration();
-    }
-    private loadValidationConfiguration() {
-        return <ComputedRef<V>>computed(() => {
-            return unref(this.serializedBaseComponent).validationConfiguration;
-        });
-    }
-    public checkDependency(dependencyPath: string) {
-        return computed(() => {
-            if (dependencyPath)
-                return ensurePathExists(dependencyPath);
-            return false;
-        });
-    }
-    public loadDependencies() {
-        this.dependencies = <ComputedRef<D>>computed(() => {
-            const dependencies: {
-                [key: string]: any;
-            } = {};
-            const dependencyPaths = this.getDependencyPaths();
-            for (const [dependencyName, dependencyPath] of Object.entries(unref(dependencyPaths))) {
-                const dependencyValue = unref(this.storeObject).getProperty(dependencyPath as JSONPathExpression);
-                dependencies[dependencyName] = dependencyValue;
-            }
-            return dependencies;
-        });
-        return this.dependencies;
-    }
-    public getComponentData(): Ref<CD> {
-        return <Ref<CD>>ref(unref(this.serializedBaseComponent).component);
-    }
-    public getSerializedComponent(): Ref<C> {
-        return this.serializedBaseComponent;
-    }
-    public getDependencyPaths(): SD {
-        return <SD>unref(this.serializedBaseComponent).dependencies;
-    }
-    public getDependencies() {
-        return this.dependencies;
-    }
-    public getNestedComponents() {
-        return unref(this.serializedBaseComponent).nestedComponents;
-    }
-    public getComponentPath() {
-        return this.serialisedBaseComponentPath;
-    }
-    public getNestedComponentPaths() {
-        const nestedComponents = this.getNestedComponents();
-        const nestedComponentsPaths = <{
-            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
-        }>{};
-        for (const nestedComponentName in nestedComponents) {
-            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
-                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
-        }
-        return nestedComponentsPaths;
     }
     protected abstract validate(value: any): void;
     public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
@@ -1307,21 +1159,10 @@ export abstract class BaseComponent<C extends SerializedBaseComponent = Serializ
         return this.dependencies;
     }
     public getNestedComponents() {
-        return unref(this.serializedBaseComponent).nestedComponents;
+        return <NC>unref(this.serializedBaseComponent).nestedComponents;
     }
     public getComponentPath() {
         return this.serialisedBaseComponentPath;
-    }
-    public getNestedComponentPaths() {
-        const nestedComponents = this.getNestedComponents();
-        const nestedComponentsPaths = <{
-            [nestedComponentName in KeyOfType<NC>]: JSONPathExpression;
-        }>{};
-        for (const nestedComponentName in nestedComponents) {
-            nestedComponentsPaths[nestedComponentName as KeyOfType<NC>] =
-                `$.${this.serialisedBaseComponentPath}.nestedComponents.${nestedComponentName}`;
-        }
-        return nestedComponentsPaths;
     }
     protected abstract validate(value: any): void;
     public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {

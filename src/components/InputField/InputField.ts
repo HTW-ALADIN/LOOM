@@ -11,7 +11,7 @@ import type { JSONPathExpression } from "@/stores/Store";
 import { unref } from "vue";
 
 import type { QInputProps } from "quasar";
-import type { IconList } from "./IconList";
+import type { IconList } from "@/Util/IconList";
 
 /**
  * The InputFieldProps interface is used to define the properties, that are passed from the parent component to the InputField component.
@@ -162,7 +162,8 @@ export class InputFieldComponent extends BaseComponent<
     externalValidation: this.externalValidation.bind(this)
   };
   /**
-   * A InputFieldComponent is valid, if the value matches the given validation strategy.
+   * A InputFieldComponent is valid, if the value matches the expected type or is not empty.
+   * A InputFieldComponent is correct, if the value matches the given validation strategy.
    * @param value
    * @returns
    */
@@ -172,13 +173,18 @@ export class InputFieldComponent extends BaseComponent<
     const validationConfiguration = unref(this.validationConfiguration);
     const validationType = <K>validationConfiguration.type;
 
-    const isValid = this.validationStrategies[validationType](
+    const isCorrect = this.validationStrategies[validationType](
       value,
       <InputFieldValidationConfiguration<K>>validationConfiguration
     );
+
     unref(this.storeObject).setProperty({
       path: `${this.serialisedBaseComponentPath}.isValid`,
-      value: isValid
+      value: value ? true : false
+    });
+    unref(this.storeObject).setProperty({
+      path: `${this.serialisedBaseComponentPath}.isCorrect`,
+      value: isCorrect
     });
   }
 
