@@ -1,85 +1,66 @@
-// import type {
-//   SerializedBaseComponent,
-//   SerialisedDependencies,
-//   ComponentDependencies,
-//   ComponentProps,
-//   ComponentData
-// } from "@/components/BaseComponent/BaseComponent";
-// import { BaseComponent } from "@/components/BaseComponent/BaseComponent";
-// import type { JSONPathExpression } from "@/stores/Store";
-// import type { ComputedRef } from "vue";
-// import { unref } from "vue";
+import type {
+  SerializedBaseComponent,
+  SerialisedDependencies,
+  ComponentDependencies,
+  ComponentProps,
+  ComponentState,
+  ComponentTypeSpecification
+} from "@/components/BaseComponent/BaseComponent";
+import { BaseComponent } from "@/components/BaseComponent/BaseComponent";
+import type { JSONPathExpression } from "@/stores/Store";
+import type { ComputedRef } from "vue";
+import { unref } from "vue";
 
-// export interface MatrixProps extends ComponentProps {}
+/**
+ * The GenericMatrixProps interface is used to define the properties of the GenericMatrix component.
+ */
+export interface GenericMatrixProps extends ComponentProps {}
 
-// export type MatrixComponentType = "GenericMatrix";
+/**
+ * The type of the GenericMatrix component.
+ */
+export type GenericMatrixComponentType = "GenericMatrix";
 
-// export interface SerializedMatrixDependencies extends SerialisedDependencies {
-//   Matrix: JSONPathExpression;
-//   RowLabel?: JSONPathExpression;
-//   ColumnLabel?: JSONPathExpression;
-// }
+/**
+ * TODO: Add description
+ */
+export interface SerializedGenericMatrixDependencies extends SerialisedDependencies {}
 
-// export interface MatrixDependencies extends ComponentDependencies {}
+/**
+ * TODO: Add description
+ */
+export interface GenericMatrixDependencies extends ComponentDependencies {}
 
-// export interface MatrixComponentData extends ComponentData {
-//   readOnly: boolean;
-//   rowLabel: string;
-//   columnlabel: string;
-// }
+/**
+ * TODO: Add description
+ */
+export interface GenericMatrixComponentState extends ComponentState {}
 
-// export interface SerializedMatrixComponent
-//   extends SerializedBaseComponent<
-//     MatrixComponentType,
-//     SerializedMatrixDependencies,
-//     MatrixComponentData
-//   > {}
+/**
+ * The SerializedGenericMatrixComponent interface is used to define the serialised properties of the GenericMatrix component.
+ */
+export interface SerializedGenericMatrixComponent
+  extends SerializedBaseComponent<GenericMatrixComponentType> {
+  dependencies: SerializedGenericMatrixDependencies;
+  state: GenericMatrixComponentState;
+}
 
-// export class MatrixComponent extends BaseComponent<
-//   SerializedMatrixComponent,
-//   SerializedMatrixDependencies,
-//   MatrixDependencies,
-//   MatrixComponentData
-// > {
-//   /**
-//    * The MatrixComponent class is a derived taskComponent, that allows for displaying Matrices with arbitrary values.
-//    */
-//   public validate() {
-//     let isValid = false;
-//     const dependencies = this.loadDependencies();
-//     if (unref(unref(dependencies).dotDescription) !== "") isValid = true;
-//     unref(this.storeObject).setProperty({
-//       path: `${this.serialisedBaseComponentPath}.isValid`,
-//       value: isValid
-//     });
+export interface GenericMatrixSpecification extends ComponentTypeSpecification {
+  Dependencies: GenericMatrixDependencies;
+  SerializedComponent: SerializedGenericMatrixComponent;
+}
 
-//     return isValid;
-//   }
-// }
-
-// /**
-//  * The MatrixFieldProps interface is used to define the properties of the MatrixField component.
-//  */
-// export interface MatrixFieldProps extends ComponentProps {
-//   /**
-//    * The rowIndex is the index of the row in the matrix.
-//    */
-//   rowIndex: number;
-//   /**
-//    * The columnIndex is the index of the column in the matrix.
-//    */
-//   columnIndex: number;
-//   /**
-//    * The isReadOnly flag indicates, whether the field is read-only.
-//    */
-//   isReadOnly: boolean;
-//   /**
-//    * The element is the value of the field.
-//    */
-//   element: number;
-//   /**
-//    * The inputType is the type of the input field.
-//    */
-//   inputType: string;
-//   taskComponent: MatrixComponent;
-// }
+/**
+ * The GenericMatrixComponent class is a derived taskComponent, that displays a Graph specified in the Graphviz-DOT language.
+ */
+export class GenericMatrixComponent extends BaseComponent<GenericMatrixSpecification> {
+  /**
+   * A GenericMatrixComponent is valid, if it has a valid dotDescription.
+   * Correctness of the dotDescription is not checked and is assumed to be set statically in the configuration.
+   * @returns
+   */
+  public validate() {
+    const validityObject = { isValid: false, isCorrect: false };
+    return validityObject;
+  }
+}

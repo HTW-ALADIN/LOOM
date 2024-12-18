@@ -3,8 +3,10 @@ import type {
   SerialisedDependencies,
   ComponentDependencies,
   ComponentProps,
-  ComponentData,
-  ValidationConfiguration
+  ComponentState,
+  ValidationConfiguration,
+  ComponentTypeSpecification,
+  ComponentConfiguration
 } from "@/components/BaseComponent/BaseComponent";
 import { BaseComponent } from "@/components/BaseComponent/BaseComponent";
 import type { JSONPathExpression } from "@/stores/Store";
@@ -44,16 +46,16 @@ export interface InputFieldDependencies extends ComponentDependencies {
  *
  * IconList is a list of all available icons in Quasar. The icon style is "material-icons" per default.
  */
-export interface FieldConfiguration extends Omit<QInputProps, "modelValue" | "inputStyle"> {
+export interface FieldConfiguration
+  extends Omit<ComponentConfiguration & QInputProps, "modelValue" | "inputStyle"> {
   icon?: IconList;
   placeholder?: string;
 }
 
 /**
- * The InputField-component may hold a static dotDescription in its componentData.
+ * The InputField-component may hold a static dotDescription in its componentState.
  */
-export interface InputFieldComponentData extends ComponentData {
-  fieldConfiguration: FieldConfiguration;
+export interface InputFieldComponentState extends ComponentState {
   fieldValue: QInputProps["modelValue"];
 }
 
@@ -123,7 +125,7 @@ interface InputFieldValidationConfigurationMap {
 
 /**
  * Configuration for the different InputField validation strategies.
- * As the typescript compiler can't handle "correlated unions", it is recommended to refactor to generics as described here: https://stackoverflow.com/questions/79160004/can-typescript-infer-subtypes-of-parameters-based-on-a-dynamic-variable-accessin
+ * As the typescript compiler can't handle "correlated unions", it is recommended to defer to generics as described here: https://stackoverflow.com/questions/79160004/can-typescript-infer-subtypes-of-parameters-based-on-a-dynamic-variable-accessin
  */
 export type InputFieldValidationConfiguration<
   K extends keyof InputFieldValidationConfigurationMap
@@ -133,28 +135,29 @@ export type InputFieldValidationConfiguration<
  * The SerializedInputFieldComponent interface is used to define the serialised properties of the InputField component.
  */
 export interface SerializedInputFieldComponent
-  extends SerializedBaseComponent<
-    InputFieldComponentType,
-    SerializedInputFieldDependencies,
-    InputFieldComponentData,
-    InputFieldValidationConfiguration<keyof InputFieldValidationConfigurationMap>
-  > {}
+  extends SerializedBaseComponent<InputFieldComponentType> {
+  dependencies: SerializedInputFieldDependencies;
+  state: InputFieldComponentState;
+  validationConfiguration: InputFieldValidationConfiguration<
+    keyof InputFieldValidationConfigurationMap
+  >;
+  componentConfiguration: FieldConfiguration;
+}
+
+export interface InputFieldSpecification extends ComponentTypeSpecification {
+  SerializedComponent: SerializedInputFieldComponent;
+  Dependencies: InputFieldDependencies;
+}
 
 /**
  * The InputFieldComponent class is a derived taskComponent, that displays a Graph specified in the Graphviz-DOT language.
  */
-export class InputFieldComponent extends BaseComponent<
-  SerializedInputFieldComponent,
-  SerializedInputFieldDependencies,
-  InputFieldDependencies,
-  InputFieldComponentData,
-  InputFieldValidationConfiguration<keyof InputFieldValidationConfigurationMap>
-> {
+export class InputFieldComponent extends BaseComponent<InputFieldSpecification> {
   private validationStrategies: {
     [K in keyof InputFieldValidationConfigurationMap]: (
       userValue: number | string | undefined | null,
       functionConfig: InputFieldValidationConfiguration<K>
-    ) => void;
+    ) => boolean;
   } = {
     compareValueFromPath: this.compareToValuesFromPathsValidation.bind(this),
     compareValueFromStatic: this.compareToStaticValuesValidation.bind(this),
@@ -173,19 +176,23 @@ export class InputFieldComponent extends BaseComponent<
     const validationConfiguration = unref(this.validationConfiguration);
     const validationType = <K>validationConfiguration.type;
 
+    const isValid = value ? true : false;
+
     const isCorrect = this.validationStrategies[validationType](
       value,
       <InputFieldValidationConfiguration<K>>validationConfiguration
     );
 
     unref(this.storeObject).setProperty({
-      path: `${this.serialisedBaseComponentPath}.isValid`,
-      value: value ? true : false
+      path: `${this.serialisedBaseComponentPath}.state.isValid`,
+      value: isValid
     });
     unref(this.storeObject).setProperty({
-      path: `${this.serialisedBaseComponentPath}.isCorrect`,
+      path: `${this.serialisedBaseComponentPath}.state.isCorrect`,
       value: isCorrect
     });
+
+    return { isValid, isCorrect };
   }
 
   /**

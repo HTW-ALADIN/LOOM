@@ -13,7 +13,7 @@ const props = defineProps<DOTGraphProps>();
 const { storeObject, componentID, componentPath, graphID } = toRefs(props);
 
 const component = new DOTGraphComponent(storeObject, unref(componentID), unref(componentPath));
-const componentData = component.getComponentData();
+const componentData = component.getComponentState();
 const dependencies = component.loadDependencies();
 
 const completeGraphID = unref(graphID)

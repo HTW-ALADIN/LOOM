@@ -3,7 +3,8 @@ import type {
   SerialisedDependencies,
   ComponentDependencies,
   ComponentProps,
-  ComponentData
+  ComponentState,
+  ComponentTypeSpecification
 } from "@/components/BaseComponent/BaseComponent";
 import { BaseComponent } from "@/components/BaseComponent/BaseComponent";
 import type { JSONPathExpression } from "@/stores/Store";
@@ -48,7 +49,7 @@ export interface DOTGraphDependencies extends ComponentDependencies {
 /**
  * The DOTGraph-component may hold a static dotDescription in its componentData.
  */
-export interface DotGraphComponentData extends ComponentData {
+export interface DotGraphComponentState extends ComponentState {
   /**
    * The dotDescription is a string, that holds the Graphviz-DOT description of the graph.
    */
@@ -59,35 +60,34 @@ export interface DotGraphComponentData extends ComponentData {
  * The SerializedDOTGraphComponent interface is used to define the serialised properties of the DOTGraph component.
  */
 export interface SerializedDOTGraphComponent
-  extends SerializedBaseComponent<
-    DOTGraphComponentType,
-    SerializedDOTGraphDependencies,
-    DotGraphComponentData
-  > {}
+  extends SerializedBaseComponent<DOTGraphComponentType> {
+  dependencies: SerializedDOTGraphDependencies;
+  state: DotGraphComponentState;
+}
+
+export interface DOTGraphComponentSpecification extends ComponentTypeSpecification {
+  SerializedComponent: SerializedDOTGraphComponent;
+  Dependencies: DOTGraphDependencies;
+}
 
 /**
  * The DOTGraphComponent class is a derived taskComponent, that displays a Graph specified in the Graphviz-DOT language.
  */
-export class DOTGraphComponent extends BaseComponent<
-  SerializedDOTGraphComponent,
-  SerializedDOTGraphDependencies,
-  DOTGraphDependencies,
-  DotGraphComponentData
-> {
+export class DOTGraphComponent extends BaseComponent<DOTGraphComponentSpecification> {
   /**
    * A DOTGraphComponent is valid, if it has a valid dotDescription.
    * Correctness of the dotDescription is not checked and is assumed to be set statically in the configuration.
    * @returns
    */
   public validate() {
-    let isValid = false;
+    const validityObject = { isValid: false, isCorrect: true };
     const dependencies = this.loadDependencies();
-    if (unref(unref(dependencies).dotDescription) !== "") isValid = true;
+    if (unref(unref(dependencies).dotDescription) !== "") validityObject.isValid = true;
     unref(this.storeObject).setProperty({
-      path: `${this.serialisedBaseComponentPath}.isValid`,
-      value: isValid
+      path: `${this.serialisedBaseComponentPath}.state.isValid`,
+      value: validityObject.isValid
     });
 
-    return isValid;
+    return validityObject;
   }
 }

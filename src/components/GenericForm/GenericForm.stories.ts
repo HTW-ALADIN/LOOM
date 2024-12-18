@@ -36,25 +36,26 @@ export const BasicGenericForm: Story = {
       0: {
         type: "GenericForm",
         name: "Example Form",
-        isValid: true,
-        isCorrect: true,
         dependencies: {},
         validationConfiguration: {},
-        component: {},
+        state: {
+          isValid: true,
+          isCorrect: true
+        },
         nestedComponents: {
           formComponents: {
             inputField1: {
               type: "InputField",
               name: "InputField1",
-              isValid: false,
-              isCorrect: false,
-              component: {
-                fieldConfiguration: {
-                  icon: "10k",
-                  label: "test",
-                  hint: "test"
-                },
+              state: {
+                isValid: false,
+                isCorrect: false,
                 fieldValue: "test"
+              },
+              componentConfiguration: {
+                icon: "10k",
+                label: "test",
+                hint: "test"
               },
               dependencies: {
                 referenceValue: "$.nodes.0.components.1.component.fieldValue"
@@ -69,16 +70,16 @@ export const BasicGenericForm: Story = {
             submit: {
               type: "GenericButton",
               name: "Submit",
-              isValid: true,
-              isCorrect: true,
               dependencies: {},
               validationConfiguration: {},
-              component: {
+              state: {
+                isValid: true,
+                isCorrect: true,
                 label: "Submit",
                 loadingState: false,
-                progressPercentage: undefined,
-                buttonConfiguration: { dimension: { width: 150, height: 150 }, icon: "gear" }
-              }
+                progressPercentage: undefined
+              },
+              componentConfiguration: { dimension: { width: 150, height: 150 }, icon: "gear" }
             }
           }
         }

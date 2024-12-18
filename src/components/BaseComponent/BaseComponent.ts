@@ -6,15 +6,15 @@ import type { Ref, ComputedRef, StyleValue } from "vue";
 /**
  * A description of a user-facing method of a component.
  */
-export interface SerialisedMethod {
+export interface MethodReference {
   description: string;
 }
 
 /**
  * A map of method names and their descriptions.
  */
-export interface SerialisedMethods {
-  [methodName: string]: SerialisedMethod;
+export interface MethodReferences {
+  [methodName: string]: MethodReference;
 }
 
 /**
@@ -27,7 +27,7 @@ export interface MethodImplementation {
 /**
  * A map of method names and their implementations.
  */
-export interface MethodImplementations {
+export interface ExposedMethods {
   [methodName: string]: MethodImplementation;
 }
 
@@ -104,7 +104,7 @@ export type ComponentDependencies = Record<string, any>;
 export type CustomInnerComponentLayout = {};
 
 /**
- * Possible nested components of a component. The components can be nested arbitrarily
+ * Possible nested components of a component. The components can be nested arbitrarily.
  */
 export interface NestedComponents {
   [nestedComponentGroupNameOrnestedComponentName: string]:
@@ -113,35 +113,19 @@ export interface NestedComponents {
 }
 
 /**
- * The data of a component.
+ * Component configuration. This holds possible configuration options for the component.
  */
-export type ComponentData = {
+export interface ComponentConfiguration {
   /**
    * Some components may offer a customizable inner component layout. The layout is required to be built with CSS Grid.
    */
   innerComponentLayout?: CustomInnerComponentLayout;
-};
+}
 
 /**
- * Generic type description with defaults of a serialised base component.
+ * The state of a component.
  */
-export interface SerializedBaseComponent<
-  T extends BaseComponentType = BaseComponentType,
-  D extends SerialisedDependencies = SerialisedDependencies,
-  C extends ComponentData = ComponentData,
-  V extends ValidationConfiguration = ValidationConfiguration,
-  SM extends SerialisedMethods = SerialisedMethods,
-  SC extends SerialisedContextMenu = SerialisedContextMenu,
-  NC extends NestedComponents = NestedComponents
-> {
-  /**
-   * The type of the component.
-   */
-  type: T;
-  /**
-   * The name of the component. Will be displayed in the component header in CARPET.
-   */
-  name: string;
+export type ComponentState = {
   /**
    * Specifices whether the user-inputs put the component in a valid state. Gives no indication of correctness of the inputs.
    */
@@ -150,50 +134,70 @@ export interface SerializedBaseComponent<
    * Specifices whether the user-inputs put the component in a correct state. Inputs are validated according to the components validation specification.
    */
   isCorrect: boolean;
+};
+
+/**
+ * Generic type description with defaults of a serialised base component.
+ */
+export interface SerializedBaseComponent<T extends BaseComponentType = BaseComponentType> {
+  /**
+   * The type of the component.
+   */
+  type: T;
+  /**
+   * The name of the component instance. Will be displayed in the component header in CARPET.
+   */
+  name: string;
   /**
    * The dependencies of the component.
    */
-  dependencies: D;
+  dependencies: SerialisedDependencies;
   /**
-   * The data of the component.
+   * The state of the component.
    */
-  component: C;
+  state: ComponentState;
+  /**
+   * Configuration options that are specific to the individual component.
+   */
+  componentConfiguration?: ComponentConfiguration;
   /**
    * The validation configuration of the component.
    */
-  validationConfiguration: V;
+  validationConfiguration?: ValidationConfiguration;
   /**
-   * The methods of the component.
+   * Optional: The methods of the component.
    */
-  methods?: SM;
+  methods?: MethodReferences;
   /**
    * Optional: The context menu of the component.
    */
-  contextMenu?: SC;
+  contextMenu?: SerialisedContextMenu;
   /**
    * Optional: Nested components of the component.
    */
-  nestedComponents?: NC;
+  nestedComponents?: NestedComponents;
 }
 
-// TODO: keep an eye on https://github.com/microsoft/TypeScript/issues/10571 for better type inference
+/**
+ * The specification of a component. Contains the serialized component, and the actual dependencies and the method implementations of the runtime component instance.
+ */
+export interface ComponentTypeSpecification {
+  SerializedComponent: SerializedBaseComponent;
+  Dependencies: ComponentDependencies;
+  MethodImplementations: ExposedMethods;
+}
 
 /**
  * The BaseComponent class is the base class for all derived CARPET components.
  */
 export abstract class BaseComponent<
-  C extends SerializedBaseComponent = SerializedBaseComponent,
-  SD extends SerialisedDependencies = SerialisedDependencies,
-  D extends ComponentDependencies = ComponentDependencies,
-  CD extends ComponentData = ComponentData,
-  V extends ValidationConfiguration = ValidationConfiguration,
-  SM extends SerialisedMethods = SerialisedMethods,
-  M extends MethodImplementations = MethodImplementations,
-  NC extends NestedComponents = NestedComponents
+  T extends ComponentTypeSpecification = ComponentTypeSpecification
 > {
-  protected serializedBaseComponent: ComputedRef<C>;
-  protected dependencies: ComputedRef<D>;
-  protected validationConfiguration: ComputedRef<V>;
+  protected serializedBaseComponent: ComputedRef<T["SerializedComponent"]>;
+  protected dependencies: ComputedRef<T["Dependencies"]>;
+  protected validationConfiguration: ComputedRef<
+    T["SerializedComponent"]["validationConfiguration"]
+  >;
 
   constructor(
     /**
@@ -206,7 +210,7 @@ export abstract class BaseComponent<
     protected componentID: number,
     protected serialisedBaseComponentPath: JSONPathExpression
   ) {
-    this.serializedBaseComponent = this.getComputedTaskGraphProperty<C>(
+    this.serializedBaseComponent = this.getComputedTaskGraphProperty<T["SerializedComponent"]>(
       serialisedBaseComponentPath
     );
 
@@ -215,7 +219,7 @@ export abstract class BaseComponent<
   }
 
   private loadValidationConfiguration() {
-    return <ComputedRef<V>>computed(() => {
+    return <ComputedRef<T["SerializedComponent"]["validationConfiguration"]>>computed(() => {
       return unref(this.serializedBaseComponent).validationConfiguration;
     });
   }
@@ -234,10 +238,10 @@ export abstract class BaseComponent<
 
   /**
    * Load the dependencies of the component.
-   * @returns ComputedRef<D>
+   * @returns ComputedRef<T["Dependencies"]
    */
   public loadDependencies() {
-    this.dependencies = <ComputedRef<D>>computed(() => {
+    this.dependencies = <ComputedRef<T["Dependencies"]>>computed(() => {
       const dependencies: { [key: string]: any } = {};
 
       const dependencyPaths = this.getDependencyPaths();
@@ -253,32 +257,44 @@ export abstract class BaseComponent<
   }
 
   /**
-   * Getter function to get the component data.
-   * @returns Ref<CD>
+   * Getter function to get the component state.
+   * @returns <Ref<T["SerializedComponent"]["state"]>>
    */
-  public getComponentData(): Ref<CD> {
-    return <Ref<CD>>ref(unref(this.serializedBaseComponent).component);
+  public getComponentState(): Ref<T["SerializedComponent"]["state"]> {
+    return <Ref<T["SerializedComponent"]["state"]>>ref(unref(this.serializedBaseComponent).state);
+  }
+
+  /**
+   * Getter function to get the component configuration.
+   * @returns <Ref<T["SerializedComponent"]["componentConfiguration"]>
+   */
+  public getComponentConfiguration(): Ref<T["SerializedComponent"]["componentConfiguration"]> {
+    return <Ref<T["SerializedComponent"]["componentConfiguration"]>>(
+      ref(unref(this.serializedBaseComponent).componentConfiguration)
+    );
   }
 
   /**
    * Getter function to get the component serialisation.
-   * @returns Ref<C>
+   * @returns Ref<T["SerializedComponent"]>
    */
-  public getSerializedComponent(): Ref<C> {
+  public getSerializedComponent(): Ref<T["SerializedComponent"]> {
     return this.serializedBaseComponent;
   }
 
   /**
    * Getter function to get the component dependency paths
-   * @returns SD
+   * @returns T["SerializedComponent"]["dependencies"]
    */
-  public getDependencyPaths(): SD {
-    return <SD>unref(this.serializedBaseComponent).dependencies;
+  public getDependencyPaths(): T["SerializedComponent"]["dependencies"] {
+    return <T["SerializedComponent"]["dependencies"]>(
+      unref(this.serializedBaseComponent).dependencies
+    );
   }
 
   /**
    * Getter function to get the component dependencies
-   * @returns ComputedRef<D>
+   * @returns ComputedRef<T["Dependencies"]
    */
   public getDependencies() {
     return this.dependencies;
@@ -286,10 +302,12 @@ export abstract class BaseComponent<
 
   /**
    * Getter function to get the nested components
-   * @returns NC
+   * @returns T["SerializedComponent"]["nestedComponents"]
    */
   public getNestedComponents() {
-    return <NC>unref(this.serializedBaseComponent).nestedComponents;
+    return <T["SerializedComponent"]["nestedComponents"]>(
+      unref(this.serializedBaseComponent).nestedComponents
+    );
   }
 
   /**
@@ -304,45 +322,36 @@ export abstract class BaseComponent<
    * The function must set the isValid property of the component by assessing the structural validity of the component. (Type assertion)
    * The function must set the isCorrect property of the component by assessing the correctness of the component. (Value assertion)
    */
-  protected abstract validate(value: any): void;
+  protected abstract validate(value: any): { isValid: boolean; isCorrect: boolean };
 
   /**
    * Helper function to get a computed property from the store.
    * @param taskGraphPath
-   * @returns ComputedRef<T>
+   * @returns ComputedRef<P>
    */
-  public getComputedTaskGraphProperty = <T = any>(taskGraphPath: JSONPathExpression) => {
-    return computed<T>(() => unref(this.storeObject).getProperty(taskGraphPath));
+  public getComputedTaskGraphProperty = <P = any>(taskGraphPath: JSONPathExpression) => {
+    return computed<P>(() => unref(this.storeObject).getProperty(taskGraphPath));
   };
 
   /**
    * Getter function to get the selected methods.
    * @param methodImplementations
-   * @returns
+   * @returns T["MethodImplementations"]
    */
-  public getSelectedMethods = (methodImplementations: M): M => {
-    const methods = <SM>unref(this.serializedBaseComponent).methods;
+  public getSelectedMethods = (
+    methodImplementations: T["MethodImplementations"]
+  ): T["MethodImplementations"] => {
+    const methods = <T["SerializedComponent"]["methods"]>(
+      unref(this.serializedBaseComponent).methods
+    );
+    // Typeguard
+    if (!methods) return <T["MethodImplementations"]>{};
     return Object.entries(methods).reduce(
       (selectedMethods, [methodName, methodDefinition]) => {
         const { description } = methodDefinition;
         return { ...selectedMethods, [description]: methodImplementations[methodName] };
       },
-      <M>{}
+      <T["MethodImplementations"]>{}
     );
   };
 }
-
-// see typescript issue https://github.com/microsoft/TypeScript/issues/23724
-export type KeyTypes<T> = {
-  [K in keyof T]-?: K extends string
-    ? string
-    : K extends number
-      ? number
-      : K extends symbol
-        ? symbol
-        : never;
-}[keyof T];
-export type KeyOfType<T, KeyType extends string | number | symbol = KeyTypes<T>> = Extract<
-  keyof T,
-  KeyType
->;

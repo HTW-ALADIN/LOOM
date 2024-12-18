@@ -3,7 +3,9 @@ import type {
   SerialisedDependencies,
   ComponentDependencies,
   ComponentProps,
-  ComponentData
+  ComponentState,
+  ComponentTypeSpecification,
+  ComponentConfiguration
 } from "@/components/BaseComponent/BaseComponent";
 import { BaseComponent } from "@/components/BaseComponent/BaseComponent";
 import type { IconList } from "@/Util/IconList";
@@ -38,7 +40,7 @@ export interface ButtonDependencies extends ComponentDependencies {}
 /**
  * The ButtonConfiguration defines the look and behavior of the button.
  */
-export interface ButtonConfiguration {
+export interface ButtonConfiguration extends ComponentConfiguration {
   /**
    * Additional icon for the button. Displayed to the left of the label.
    */
@@ -60,8 +62,7 @@ export interface ButtonConfiguration {
  * The Button-component has to display a label. It may display a progress bar or a loading spinner.
  * It can be disabled on invalid input.
  */
-export interface ButtonComponentData extends ComponentData {
-  buttonConfiguration: ButtonConfiguration;
+export interface ButtonComponentState extends ComponentState {
   /**
    * The label of the button.
    */
@@ -79,27 +80,26 @@ export interface ButtonComponentData extends ComponentData {
 /**
  * The SerializedButtonComponent interface is used to define the serialised properties of the Button component.
  */
-export interface SerializedButtonComponent
-  extends SerializedBaseComponent<
-    ButtonComponentType,
-    SerializedButtonDependencies,
-    ButtonComponentData
-  > {}
+export interface SerializedButtonComponent extends SerializedBaseComponent<ButtonComponentType> {
+  dependencies: SerializedButtonDependencies;
+  state: ButtonComponentState;
+  componentConfiguration: ButtonConfiguration;
+}
+
+export interface ButtonSpecification extends ComponentTypeSpecification {
+  SerializedComponent: SerializedButtonComponent;
+  Dependencies: ButtonDependencies;
+}
 
 /**
  * The ButtonComponent class is a derived taskComponent, that displays a Graph specified in the Graphviz-DOT language.
  */
-export class ButtonComponent extends BaseComponent<
-  SerializedButtonComponent,
-  SerializedButtonDependencies,
-  ButtonDependencies,
-  ButtonComponentData
-> {
+export class ButtonComponent extends BaseComponent<ButtonSpecification> {
   /**
    * A ButtonComponent is valid, if the parent element has decided it is valid.
    * @returns
    */
   public validate(isValid: boolean) {
-    return isValid;
+    return { isValid: isValid, isCorrect: true };
   }
 }

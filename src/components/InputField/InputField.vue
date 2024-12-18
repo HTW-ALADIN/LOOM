@@ -26,15 +26,15 @@ const props = defineProps<InputFieldProps>();
 const { storeObject, componentID, componentPath } = toRefs(props);
 
 const component = new InputFieldComponent(storeObject, unref(componentID), unref(componentPath));
-const componentData = component.getComponentData();
-const fieldConfiguration = unref(componentData).fieldConfiguration;
+const componentState = component.getComponentState();
+const fieldConfiguration = component.getComponentConfiguration();
 
 const dependencies = component.loadDependencies();
 
-const value: Ref<(typeof componentData.value)["fieldValue"]> = ref(undefined);
+const value: Ref<(typeof componentState.value)["fieldValue"]> = ref(undefined);
 
 onMounted(() => {
-  value.value = dependencies.value.referenceValue ?? unref(componentData).fieldValue;
+  value.value = dependencies.value.referenceValue ?? unref(componentState).fieldValue;
   component.validate(<string | number | undefined | null>value.value);
 });
 
@@ -50,7 +50,7 @@ watch(
 
 const onUserInput = (newValue: string | number | null) => {
   unref(storeObject).setProperty({
-    path: `${component.getComponentPath()}.component.fieldValue`,
+    path: `${component.getComponentPath()}.state.fieldValue`,
     value: newValue
   });
   component.validate(<string | number | undefined | null>value.value);

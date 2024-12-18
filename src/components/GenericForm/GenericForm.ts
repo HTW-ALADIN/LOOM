@@ -3,12 +3,10 @@ import type {
   SerialisedDependencies,
   ComponentDependencies,
   ComponentProps,
-  ComponentData,
+  ComponentState,
   ValidationConfiguration,
-  SerialisedMethods,
-  SerialisedContextMenu,
   NestedComponents,
-  MethodImplementations
+  ComponentTypeSpecification
 } from "@/components/BaseComponent/BaseComponent";
 import { BaseComponent } from "@/components/BaseComponent/BaseComponent";
 import type { JSONPathExpression } from "@/stores/Store";
@@ -44,7 +42,10 @@ export interface FormDependencies extends ComponentDependencies {
 /**
  * The Form-component may hold nothing.
  */
-export interface FormComponentData extends ComponentData {}
+export interface FormComponentState extends ComponentState {
+  dependenciesAreValidAndFormFieldsAreCorrect: boolean;
+  formFieldsAreValidAndDependenciesAreCorrect: boolean;
+}
 
 /**
  * The form-component is submitable if the validation checks that are governed by the FormValidationConfiguration are passed.
@@ -81,35 +82,22 @@ export interface ValidationResult {
 /**
  * The SerializedFormComponent interface is used to define the serialised properties of the Form component.
  */
-export interface SerializedFormComponent
-  extends SerializedBaseComponent<
-    FormComponentType,
-    SerializedFormDependencies,
-    FormComponentData,
-    FormValidationConfiguration,
-    SerialisedMethods,
-    SerialisedContextMenu,
-    FormNestedComponents
-  > {
-  dependenciesAreValidAndFormFieldsAreCorrect: boolean;
-  formFieldsAreValidAndDependenciesAreCorrect: boolean;
+export interface SerializedFormComponent extends SerializedBaseComponent<FormComponentType> {
+  dependencies: SerializedFormDependencies;
+  state: FormComponentState;
+  validationConfiguration: FormValidationConfiguration;
+  nestedComponents: FormNestedComponents;
+}
+
+export interface FormSpecification extends ComponentTypeSpecification {
+  SerializedComponent: SerializedFormComponent;
+  Dependencies: FormDependencies;
 }
 
 /**
  * The FormComponent class is a derived taskComponent, that displays a Graph specified in the Graphviz-DOT language.
  */
-export class FormComponent extends BaseComponent<
-  SerializedFormComponent,
-  SerializedFormDependencies,
-  FormDependencies,
-  FormComponentData,
-  FormValidationConfiguration,
-  SerialisedMethods,
-  MethodImplementations,
-  FormNestedComponents
-> {
-  private dependenciesAreValidAndFormFieldsAreCorrect: boolean = false;
-  private formFieldsAreValidAndDependenciesAreCorrect: boolean = false;
+export class FormComponent extends BaseComponent<FormSpecification> {
   /**
    * A FormComponent is valid, if all elements in the form are valid and all external dependencies are valid.
    * A FormComponent is correct, if all elements in the form are correct and all external dependencies are correct.
@@ -131,7 +119,7 @@ export class FormComponent extends BaseComponent<
 
     Object.entries(validationResult).forEach(([key, value]) => {
       unref(this.storeObject).setProperty({
-        path: `${this.serialisedBaseComponentPath}.${key}`,
+        path: `${this.serialisedBaseComponentPath}.state.${key}`,
         value
       });
     });
@@ -142,8 +130,8 @@ export class FormComponent extends BaseComponent<
   private validateValidityAndCorrectness(serializedComponents: Array<SerializedBaseComponent>) {
     return serializedComponents.reduce(
       (validity, dependentComponent) => {
-        validity.isValid = validity.isValid && dependentComponent.isValid;
-        validity.isCorrect = validity.isCorrect && dependentComponent.isCorrect;
+        validity.isValid = validity.isValid && dependentComponent.state.isValid;
+        validity.isCorrect = validity.isCorrect && dependentComponent.state.isCorrect;
         return validity;
       },
       { isValid: true, isCorrect: true }

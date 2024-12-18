@@ -37,16 +37,16 @@ export const ProgressBarButton: Story = {
       0: {
         type: "GenericButton",
         name: "Clickable button with a progressbar.",
-        isValid: true,
-        isCorrect: true,
         dependencies: {},
         validationConfiguration: {},
-        component: {
+        state: {
+          isValid: true,
+          isCorrect: true,
           label: "Click me!",
           loadingState: false,
-          progressPercentage: undefined,
-          buttonConfiguration: { dimension: { width: 150, height: 150 }, icon: "gear" }
-        }
+          progressPercentage: undefined
+        },
+        componentConfiguration: { dimension: { width: 150, height: 150 }, icon: "gear" }
       }
     }),
     isValid: true

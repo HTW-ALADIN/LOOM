@@ -36,16 +36,16 @@ export const NumericInputField: Story = {
       0: {
         type: "InputField",
         name: "Numeric Input Field",
-        isValid: false,
-        isCorrect: false,
         dependencies: {},
         validationConfiguration: {
           type: "compareValueFromStatic",
           comparisons: [{ operator: "==", value: 32 }]
         },
-        component: {
-          fieldConfiguration: { fieldValue: 20 }
-        }
+        state: {
+          isValid: false,
+          isCorrect: false
+        },
+        componentConfiguration: { fieldValue: 20 }
       }
     }),
     componentPath: "$.0"

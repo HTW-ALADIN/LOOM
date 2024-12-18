@@ -1,6 +1,6 @@
 <template>
   <QBtn
-    :loading="componentData.loadingState"
+    :loading="componentState.loadingState"
     :percentage="progressPercentage"
     color="primary"
     @click="$emit('buttonClick')"
@@ -8,7 +8,7 @@
     :icon="buttonConfiguration.icon"
     :disable="buttonConfiguration.disableOnInvalid && !isValid ? true : undefined"
   >
-    {{ componentData.label }}
+    {{ componentState.label }}
     <template v-slot:loading>
       <QSpinnerHourglass class="on-left"> </QSpinnerHourglass>
     </template>
@@ -27,10 +27,10 @@ const props = defineProps<ButtonProps>();
 const { storeObject, componentID, componentPath, isValid } = toRefs(props);
 
 const component = new ButtonComponent(storeObject, unref(componentID), unref(componentPath));
-const componentData = component.getComponentData();
-const buttonConfiguration = unref(componentData).buttonConfiguration;
+const componentState = component.getComponentState();
+const buttonConfiguration = component.getComponentConfiguration();
 
-const progressPercentage = ref(<number | undefined>unref(componentData).progressPercentage);
+const progressPercentage = ref(<number | undefined>unref(componentState).progressPercentage);
 </script>
 
 <style></style>
