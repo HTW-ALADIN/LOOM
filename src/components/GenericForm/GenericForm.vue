@@ -21,7 +21,7 @@
         componentID="submit"
         :componentPath="`${componentPath}.nestedComponents.actionComponents.submit`"
         :isValid="validationResult[formIsSubmitableWhen]"
-        @buttonClick="submitActionHandler"
+        @buttonClick="component.actionHandler(emit, 'submit')"
       />
       <!-- TODO: implement optional reset action -->
     </div>
@@ -31,8 +31,9 @@
 <script lang="ts" setup>
 import { toRefs, unref, watch, ref } from "vue";
 import { FormComponent } from "@/components/GenericForm/GenericForm";
-import type { FormProps, ValidationResult } from "@/components/GenericForm/GenericForm";
+import type { FormProps, FormEmits, ValidationResult } from "@/components/GenericForm/GenericForm";
 
+const emit = defineEmits<FormEmits>();
 const props = defineProps<FormProps>();
 const { storeObject, componentID, componentPath } = toRefs(props);
 
@@ -44,12 +45,6 @@ const validationResult = ref(component.validate());
 const formIsSubmitableWhen: keyof ValidationResult = unref(storeObject).getProperty(
   `${unref(componentPath)}.validationConfiguration.submitableWhen`
 );
-
-const submitActionHandler = () => {
-  console.warn("ACTION SUBMITTED");
-  // TODO: implement submit action handler
-  window.alert("Form submitted.");
-};
 
 /**
  * Watch for changes in external dependencies to validate the form.

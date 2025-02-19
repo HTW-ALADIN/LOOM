@@ -6,7 +6,12 @@ import type {
   ComponentState,
   ValidationConfiguration,
   NestedComponents,
-  ComponentTypeSpecification
+  ComponentTypeSpecification,
+  PublicComponentEmit,
+  ComponentEmits,
+  ActionPayload,
+  FetchAction,
+  ComponentActions
 } from "@/components/BaseComponent/BaseComponent";
 import { BaseComponent } from "@/components/BaseComponent/BaseComponent";
 import type { JSONPathExpression } from "@/stores/Store";
@@ -40,7 +45,26 @@ export interface FormDependencies extends ComponentDependencies {
 }
 
 /**
- * The Form-component may hold nothing.
+ * The structure of the payload that is emitted by the Form-component.
+ */
+export interface FormPayload extends ActionPayload {
+  formFields: { [key: string]: any };
+  externalValues: { [key: string]: any };
+}
+
+/**
+ * The Form-component emits an action event.
+ * The payload contains the form fields and the values of potential dependencies.
+ * The triggered action has to be specified in the component configuration.
+ */
+export type FormEmit = [payload: FormPayload] & PublicComponentEmit;
+
+export type FormEmits = {
+  submit: FormEmit;
+} & ComponentEmits;
+
+/**
+ * The Form-component has additional state properties for validation.
  */
 export interface FormComponentState extends ComponentState {
   dependenciesAreValidAndFormFieldsAreCorrect: boolean;
@@ -62,6 +86,9 @@ export interface FormValidationConfiguration extends ValidationConfiguration {
  * The Form-component consists of arbitrarily many input fields and a set of buttons.
  */
 export interface FormNestedComponents extends NestedComponents {
+  /**
+   * Components used as formComponents MUST expose their user input value as fieldValue in their componentState. See InputField for an example.
+   */
   formComponents: {
     // TODO: Include DropdownComponent, Sliders, Checkboxes, etc.
     [key: string]: SerializedInputFieldComponent;
@@ -72,11 +99,27 @@ export interface FormNestedComponents extends NestedComponents {
   };
 }
 
+/**
+ * The ValidationResult holds the validation information for all combinations of validity and correctnes for fields and dependencies.
+ */
 export interface ValidationResult {
   isValid: boolean;
   isCorrect: boolean;
   dependenciesAreValidAndFormFieldsAreCorrect: boolean;
   formFieldsAreValidAndDependenciesAreCorrect: boolean;
+}
+
+export interface SubmitAction extends FetchAction {
+  externalValues?: {
+    [key: string]: JSONPathExpression;
+  };
+}
+
+/**
+ * The FormComponent allows to emit a fetch-action on submitting the form.
+ */
+export interface FormActions extends ComponentActions {
+  submit: SubmitAction;
 }
 
 /**
@@ -87,11 +130,13 @@ export interface SerializedFormComponent extends SerializedBaseComponent<FormCom
   state: FormComponentState;
   validationConfiguration: FormValidationConfiguration;
   nestedComponents: FormNestedComponents;
+  actions: FormActions;
 }
 
 export interface FormSpecification extends ComponentTypeSpecification {
   SerializedComponent: SerializedFormComponent;
   Dependencies: FormDependencies;
+  Emits: FormEmits;
 }
 
 /**
@@ -136,5 +181,36 @@ export class FormComponent extends BaseComponent<FormSpecification> {
       },
       { isValid: true, isCorrect: true }
     );
+  }
+
+  /**
+   * The FormComponent emits a submit event with the values of the form fields and potential external values as its payload.
+   * Assumes that user values in the form fields are stored in the fieldValue property of their componentState.
+   * @returns
+   */
+  protected constructPayload() {
+    const externalValueReferences =
+      unref(this.serializedBaseComponent).actions.submit.externalValues || {};
+
+    const externalValues = Object.entries(externalValueReferences).reduce(
+      (externalValues, [key, path]) => {
+        const externalValue = unref(this.storeObject).getProperty(path);
+        externalValues[key] = externalValue;
+        return externalValues;
+      },
+      {} as { [key: string]: any }
+    );
+
+    const formFields = Object.entries(this.getNestedComponents().formComponents).reduce(
+      (formFieldValues, [key, component]) => {
+        const value = component.state.fieldValue;
+        formFieldValues[key] = value;
+
+        return formFieldValues;
+      },
+      {} as { [key: string]: any }
+    );
+
+    return { formFields, externalValues };
   }
 }

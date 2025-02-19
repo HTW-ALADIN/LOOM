@@ -4,9 +4,10 @@ import type {
   ComponentDependencies,
   ComponentProps,
   ComponentState,
-  ValidationConfiguration,
   ComponentTypeSpecification,
-  ComponentConfiguration
+  ComponentConfiguration,
+  ValidationStrategy,
+  ValidationConfigurationMap
 } from "@/components/BaseComponent/BaseComponent";
 import { BaseComponent } from "@/components/BaseComponent/BaseComponent";
 import type { JSONPathExpression } from "@/stores/Store";
@@ -26,14 +27,14 @@ export interface InputFieldProps extends ComponentProps {}
 export type InputFieldComponentType = "InputField";
 
 /**
- * The InputField-component requires a valid [???] to display.
+ * The InputField-component may load its value from a reference value.
  */
 export interface SerializedInputFieldDependencies extends SerialisedDependencies {
   referenceValue?: JSONPathExpression;
 }
 
 /**
- * The InputField-component requires a valid dotDescription to display.
+ * The InputField-component may load its value from a reference value.
  */
 export interface InputFieldDependencies extends ComponentDependencies {
   referenceValue?: QInputProps["modelValue"];
@@ -53,7 +54,7 @@ export interface FieldConfiguration
 }
 
 /**
- * The InputField-component may hold a static dotDescription in its componentState.
+ * The InputField-component holds a fieldValue in its componentState.
  */
 export interface InputFieldComponentState extends ComponentState {
   fieldValue: QInputProps["modelValue"];
@@ -70,9 +71,19 @@ export interface PathComparisonConfiguration {
 }
 
 /**
+ * Baseline configuration for all validation strategies for an InputField.
+ */
+export interface InputFieldValidationStrategy extends ValidationStrategy {
+  /**
+   * Whether empty fields are treated as valid.
+   */
+  validOnEmptyField: boolean;
+}
+
+/**
  * Validation strategy that compares value from a path to the value of the input field.
  */
-export interface CompareToValuesFromPathsValidationStrategy extends ValidationConfiguration {
+export interface CompareToValuesFromPathsValidationStrategy extends InputFieldValidationStrategy {
   type: "compareValueFromPath";
   comparisons: Array<PathComparisonConfiguration>;
 }
@@ -88,7 +99,7 @@ export interface StaticComparisonConfiguration {
 /**
  * Validation strategy that compares static values to the value of the input field.
  */
-export interface CompareToStaticValuesValidationStrategy extends ValidationConfiguration {
+export interface CompareToStaticValuesValidationStrategy extends InputFieldValidationStrategy {
   type: "compareValueFromStatic";
   comparisons: Array<StaticComparisonConfiguration>;
 }
@@ -98,7 +109,7 @@ export interface CompareToStaticValuesValidationStrategy extends ValidationConfi
  *
  * Typescript does not support modeling regular expressions as a type yet, so we use a string here. See e.g. https://github.com/microsoft/TypeScript/issues/6579 .
  */
-export interface MatchAgainstRegExpValidationStrategy extends ValidationConfiguration {
+export interface MatchAgainstRegExpValidationStrategy extends InputFieldValidationStrategy {
   type: "matchAgainstRegExp";
   regExp: string;
 }
@@ -108,7 +119,7 @@ export interface MatchAgainstRegExpValidationStrategy extends ValidationConfigur
  *
  * Typescript does not support modeling regular expressions as a type yet, so we use a string here. See e.g. https://github.com/microsoft/TypeScript/issues/6579 .
  */
-export interface ExternalValidationStrategy extends ValidationConfiguration {
+export interface ExternalValidationStrategy extends InputFieldValidationStrategy {
   type: "externalValidation";
   url: string;
 }
@@ -116,7 +127,7 @@ export interface ExternalValidationStrategy extends ValidationConfiguration {
 /**
  * Map of all available validation strategies for the InputField component.
  */
-interface InputFieldValidationConfigurationMap {
+interface InputFieldValidationConfigurationMap extends ValidationConfigurationMap {
   compareValueFromPath: CompareToStaticValuesValidationStrategy;
   compareValueFromStatic: CompareToValuesFromPathsValidationStrategy;
   matchAgainstRegExp: MatchAgainstRegExpValidationStrategy;
@@ -129,7 +140,9 @@ interface InputFieldValidationConfigurationMap {
  */
 export type InputFieldValidationConfiguration<
   K extends keyof InputFieldValidationConfigurationMap
-> = { [P in K]: { type: P } & InputFieldValidationConfigurationMap[P] }[K];
+> = {
+  [P in K]: { type: P } & InputFieldValidationConfigurationMap[P];
+}[K];
 
 /**
  * The SerializedInputFieldComponent interface is used to define the serialised properties of the InputField component.
@@ -176,7 +189,7 @@ export class InputFieldComponent extends BaseComponent<InputFieldSpecification> 
     const validationConfiguration = unref(this.validationConfiguration);
     const validationType = <K>validationConfiguration.type;
 
-    const isValid = value ? true : false;
+    const isValid = validationConfiguration.validOnEmptyField || value ? true : false;
 
     const isCorrect = this.validationStrategies[validationType](
       value,

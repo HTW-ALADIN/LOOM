@@ -12,3 +12,10 @@ export type KeyOfType<T, KeyType extends string | number | symbol = KeyTypes<T>>
   keyof T,
   KeyType
 >;
+
+export type TypeOfLastTupleElement<T extends any[]> = T extends [...any[], infer R] ? R : never;
+
+export type ValueOf<T> = T[keyof T];
+
+// https://stackoverflow.com/a/75088992/14804461
+export type StringLiteralList<T, K extends keyof T> = T[keyof Pick<T, K>];

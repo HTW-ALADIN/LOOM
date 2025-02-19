@@ -76,7 +76,7 @@ export interface StoreAPI<State extends StateTree = StateTree> {
    * @param urlPath Partial URL path
    * @returns any
    */
-  fetchFromAPI: (urlPath: string) => any;
+  fetchFromAPI?: (urlPath: string) => any;
 }
 
 /**

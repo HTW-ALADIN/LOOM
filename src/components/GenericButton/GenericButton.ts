@@ -5,7 +5,8 @@ import type {
   ComponentProps,
   ComponentState,
   ComponentTypeSpecification,
-  ComponentConfiguration
+  ComponentConfiguration,
+  ComponentEmits
 } from "@/components/BaseComponent/BaseComponent";
 import { BaseComponent } from "@/components/BaseComponent/BaseComponent";
 import type { IconList } from "@/Util/IconList";
@@ -18,9 +19,16 @@ export interface ButtonProps extends ComponentProps {
 }
 
 /**
+ * The ClickEmit type is used to define the emitted event of the Button component.
+ */
+export type ClickEmit = [];
+
+/**
  * The Button component emitts an event on click.
  */
-export type ButtonEmits = { buttonClick: [] };
+export type ButtonEmits = {
+  buttonClick: ClickEmit;
+} & ComponentEmits;
 
 /**
  * The type of the Button component.
@@ -89,6 +97,7 @@ export interface SerializedButtonComponent extends SerializedBaseComponent<Butto
 export interface ButtonSpecification extends ComponentTypeSpecification {
   SerializedComponent: SerializedButtonComponent;
   Dependencies: ButtonDependencies;
+  Emits: ButtonEmits;
 }
 
 /**

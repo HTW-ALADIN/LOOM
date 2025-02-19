@@ -1,7 +1,8 @@
 import type { StoreAPI, JSONPathExpression } from "@/stores/Store";
 import { ensurePathExists } from "@/stores/Store";
 import { unref, computed, ref } from "vue";
-import type { Ref, ComputedRef, StyleValue } from "vue";
+import type { Ref, ComputedRef, StyleValue, EmitFn } from "vue";
+import type { TypeOfLastTupleElement } from "@/Util/Util";
 
 /**
  * A description of a user-facing method of a component.
@@ -57,10 +58,33 @@ export interface ComponentProps {
 }
 
 /**
- * Eventual emitted events of a component. Parent components can listen to these events.
- * Especially useful when nesting components.
+ * Base-type of a private emitted event of a component. Private events are meant to be consumed only by other components.
  */
-export type ComponentEmits = Record<string, any[]>;
+export type PrivateComponentEmit = [];
+
+/**
+ * The payload of an public action-event.
+ */
+export interface ActionPayload {}
+
+/**
+ * Base-type of a public emitted event of a component.
+ * Public events are meant to be consumed by the execution engine that executes the component.
+ */
+export type PublicComponentEmit = [type: string, action: string, payload: ActionPayload] &
+  PrivateComponentEmit;
+
+/**
+ * Eventual emitted events of a component. Parent components can listen to these events.
+ *
+ * These should be consumed by the execution engine for the individual components.
+ *
+ * Also useful when nesting components.
+ */
+export interface ComponentEmits {
+  [key: string]: PrivateComponentEmit;
+}
+// Record<string, PrivateComponentEmit>;
 
 /**
  * The type of a component.
@@ -85,6 +109,20 @@ export type SerialisedContextMenu = {
  * The configuration of the validation of a component.
  */
 export type ValidationConfiguration = {};
+
+/**
+ * There may be multiple validation strategies for a component.
+ * It is advised to utilize the ValidationStrategy-interface and its type property to distinguish between different strategies.
+ */
+export interface ValidationStrategy extends ValidationConfiguration {
+  type: string;
+}
+
+/**
+ * If multiple strategies are used, the strategies are to be acessed via the InputFieldValidationConfigurationMap-type.
+ */
+// export type ValidationConfigurationMap = Record<string, ValidationStrategy>;
+export interface ValidationConfigurationMap {}
 
 /**
  * Serialised dependencies of a component.
@@ -137,6 +175,28 @@ export type ComponentState = {
 };
 
 /**
+ * The serialized configuration of a component action.
+ */
+export interface ComponentAction {
+  type: string;
+  action: string;
+}
+
+/**
+ * The fetch action is a special action that is used to fetch data from an external source.
+ */
+export interface FetchAction extends ComponentAction {
+  type: "fetch";
+}
+
+/**
+ * The serialized configuration for the actions of a component.
+ */
+export interface ComponentActions {
+  [key: string]: ComponentAction;
+}
+
+/**
  * Generic type description with defaults of a serialised base component.
  */
 export interface SerializedBaseComponent<T extends BaseComponentType = BaseComponentType> {
@@ -176,6 +236,10 @@ export interface SerializedBaseComponent<T extends BaseComponentType = BaseCompo
    * Optional: Nested components of the component.
    */
   nestedComponents?: NestedComponents;
+  /**
+   * Optional: Actions that can be emitted by the component.
+   */
+  actions?: ComponentActions;
 }
 
 /**
@@ -185,6 +249,7 @@ export interface ComponentTypeSpecification {
   SerializedComponent: SerializedBaseComponent;
   Dependencies: ComponentDependencies;
   MethodImplementations: ExposedMethods;
+  Emits: ComponentEmits;
 }
 
 /**
@@ -354,4 +419,32 @@ export abstract class BaseComponent<
       <T["MethodImplementations"]>{}
     );
   };
+
+  /**
+   * Returns the action configuration for a specific action of the component.
+   * @param event String that associates with an action of the component.
+   * @returns
+   */
+  public getActionConfig = (event: string) => {
+    return this.serializedBaseComponent.value.actions?.[event] as ComponentAction;
+  };
+
+  /**
+   * The actionHandler function is used to emit an action event.
+   * @param emit
+   * @param event
+   */
+  public actionHandler = (emit: EmitFn, event: string) => {
+    const payload = this.constructPayload?.();
+    const { type, action } = this.getActionConfig(event);
+
+    emit("action", type, action, payload);
+  };
+
+  /**
+   * The constructPayload function is used to construct the payload of an action event.
+   * The function must be implemented in the derived component class.
+   * @returns
+   */
+  protected constructPayload?(): ActionPayload | TypeOfLastTupleElement<T["Emits"][string]>;
 }
