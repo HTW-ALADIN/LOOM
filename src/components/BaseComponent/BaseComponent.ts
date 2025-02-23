@@ -71,7 +71,7 @@ export interface ActionPayload {}
  * Base-type of a public emitted event of a component.
  * Public events are meant to be consumed by the execution engine that executes the component.
  */
-export type PublicComponentEmit = [type: string, action: string, payload: ActionPayload] &
+export type PublicComponentEmit = [actionType: string, payload: ActionPayload] &
   PrivateComponentEmit;
 
 /**
@@ -179,7 +179,6 @@ export type ComponentState = {
  */
 export interface ComponentAction {
   type: string;
-  action: string;
 }
 
 /**
@@ -436,9 +435,9 @@ export abstract class BaseComponent<
    */
   public actionHandler = (emit: EmitFn, event: string) => {
     const payload = this.constructPayload?.();
-    const { type, action } = this.getActionConfig(event);
+    const { type } = this.getActionConfig(event);
 
-    emit("action", type, action, payload);
+    emit("action", type, payload);
   };
 
   /**

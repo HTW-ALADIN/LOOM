@@ -57,10 +57,10 @@ export interface FormPayload extends ActionPayload {
  * The payload contains the form fields and the values of potential dependencies.
  * The triggered action has to be specified in the component configuration.
  */
-export type FormEmit = [payload: FormPayload] & PublicComponentEmit;
+export type FormEmit = [actionType: "submit", payload: FormPayload] & PublicComponentEmit;
 
 export type FormEmits = {
-  submit: FormEmit;
+  action: FormEmit;
 } & ComponentEmits;
 
 /**
