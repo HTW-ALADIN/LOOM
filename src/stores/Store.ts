@@ -33,9 +33,35 @@ export interface StoreGetter {
 }
 
 /**
+ * Enumeration of possible actors that may cause an event.
+ */
+export enum EventCause {
+  System = "System",
+  User = "User",
+  Store = "Store"
+}
+
+export type LayoutSizes = string;
+export type Layout = {
+  [id: number]: {
+    x: number;
+    y: number;
+    height: number;
+    width: number;
+    padding?: number;
+  };
+};
+
+export type Layouts = {
+  [layoutSize in LayoutSizes]: Layout;
+};
+
+/**
  * The StoreSetterMetaData interface is used to pass additional information to the StoreSetter function.
  */
 export interface StoreSetterMetaData {
+  cause?: EventCause;
+  componentSource?: string;
   [key: string]: any;
 }
 
