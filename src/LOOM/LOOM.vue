@@ -37,14 +37,9 @@ import ControlBar from "./ControlBar.vue";
 import { computed, unref, watch } from "vue";
 
 import ThreadContainer from "./ThreadContainer.vue";
-import type {
-  SerializedCARPETComponents,
-  StoreAPI,
-  LayoutSizes,
-  Layouts
-} from "carpet-component-library";
+import type { StoreAPI, LayoutSizes, Layouts } from "@/stores/Store";
 
-import type { SerialisedComponents } from "@/index";
+import type { SerialisedComponents, SerializedCARPETComponents } from "@/index";
 
 const props = defineProps<{
   storeObject: StoreAPI;
