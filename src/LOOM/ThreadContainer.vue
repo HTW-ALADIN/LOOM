@@ -234,7 +234,6 @@ const collisionCorrection = (x: number, y: number, width: number, height: number
 
 .vue-flow__resize-control.bottom.right {
   position: absolute;
-  top: 0;
   left: 0;
   width: 6px;
   height: 6px;
