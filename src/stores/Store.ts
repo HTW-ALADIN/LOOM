@@ -62,6 +62,7 @@ export type Layouts = {
 export interface StoreSetterMetaData {
   cause?: EventCause;
   componentSource?: string;
+  record?: boolean;
   [key: string]: any;
 }
 
