@@ -1,6 +1,6 @@
 {
   "name": "carpet-component-library",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "author": "Paul Christ",
   "files": [
     "dist",
@@ -26,7 +26,7 @@
         "default": "./dist/carpet-component-library.umd.cjs"
       }
     },
-    "./style.css": "./dist/style.css"
+    "./style.css": "./dist/carpet-component-library.css"
   },
   "types": "dist/index.d.ts",
   "engines": {
